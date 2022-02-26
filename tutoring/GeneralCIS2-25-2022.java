@@ -1,3 +1,5 @@
+// Rank sorting example
+
 import java.util.Scanner;
 import java.util.Arrays;
 
@@ -24,7 +26,7 @@ public class helloworld
             listInt [increment] = x;
             System.out.println(Arrays.toString(listInt));            
             //for ( int j = 0; j < listInt.length - 1 ; j++)
-            for ( int j = 0; j < increment - 1 ; j++)
+            for ( int j = 0; j < increment; j++)
             {                
                 if (x > listInt[j])
                 rankkey++;
