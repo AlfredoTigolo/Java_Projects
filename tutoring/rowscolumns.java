@@ -11,6 +11,8 @@ class rowscolumns
         int sizeI = Integer.parseInt ( l );
         
         do {
+           int i = 0; // initialize loop
+           int j = 0; // inner loop
            int k = 0; // filler loop
             for (i = 0; i < sizeI - 1; i++) //print rows of x horizontally
                 System.out.print("x" + i);
