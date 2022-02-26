@@ -11,15 +11,13 @@ class rowscolumns
         int sizeI = Integer.parseInt ( l );
         
         do {
-            int i = 0; // initialize loop
-            int j = 0; // inner loop
-            int k = 0; // filler loop
-            for (i = 0; i < sizeI - 1; i++) //print rows of x
-                System.out.print("x");
+           int k = 0; // filler loop
+            for (i = 0; i < sizeI - 1; i++) //print rows of x horizontally
+                System.out.print("x" + i);
                 for ( j = 0; j < sizeI; j++)
-                    System.out.println("x");
-                    for (k = 1; i < sizeI - 1; k++) //print rows of x
-                        System.out.print("x");
+                    System.out.println("x" + j); // prints columns of x veritically
+                    for (k = 0; k < j - 1; k++) //print rows of x
+                        System.out.print("x" + k);
                 if (sizeI - 1 == i) // exits do while loop                
                     break;
         } while (true);
