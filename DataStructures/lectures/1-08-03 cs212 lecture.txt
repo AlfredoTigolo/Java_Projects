@@ -1,0 +1,113 @@
+1-07-03   
+CS212
+Jen Chen
+
+http://www.calstatela.edu/faculty/jchen13/
+
+A=65(ASCII)
+2^6 = 64
+01000001=2^8
+8-bits binary
+
+robust code?  Error checking?
+
+Try and catch error checking with Java.  Has something called exceptions.
+
+
+
+REVIEWING
+THREADS
+LEVELS OF INHERITENCE
+CLASSES
+INTERFACES (ABSTRACT CLASSES AND REGULAR INTERFACES)
+
+THREAD CLASSES HAS A METHOD CALLED RUN()
+
+Thread
+Runnable is an abstract class that has the Run() method of the Thread Class
+
+Two ways to implement threads.
+  1. extends the Thread class 
+  2. implement the Runnable interface
+
+Thread: built in class that out class(es) need to extends to and override the run()method.
+
+-> Useful methods of the Thread class:
+  
+  Join(): wait until one thread finishes a job then the next thread will starts other job.
+  
+  setDaemon(): to set a thread to be child of the main() thread.  When main() thread exits,
+  then all child threads will stop functioning.
+  [unix command that sets processing, back ground processing, ASK RICHARD ABOUT IT.
+  Safe to setDaemon unless you know what you are doing]
+  
+  start(): start a thread
+  
+  run(): running a thread [Remember: could not run w/o start()]
+  
+  Reviewing JBuilder 6 Enterprise
+  
+  Good Programmer Knows Here to look for the Help file
+  
+  Don't destroy() threads unless you know what you are doing.
+  
+  Don't use the interrupt as much and just wait nicely.
+  
+  Difference between cs202 to cs212.  Improve your code and make the speed faster.
+  
+  If you don't manager a thread very well, you will crash the program.
+  
+  
+  WHY DO WE USE THREADS?
+  
+  Multimedia and Efficiency
+  i.e.
+  Running movies and singing at the same time.
+  
+  ex. of threads
+  
+  [code]
+  //sequential code, but threads are excuted everywhere. Think beyond multimedia.
+  int maxSize = 10000;
+  int[] arr = new int[maxSize];
+  int sum = 0, i  = 1; //want to sum it all up
+  
+  while (i <= maxSize)
+  {
+     sum += sum + i;
+     i++; //is this really needed?
+  } // read 10,000 times then add up the result! ==> VERY SLOW!
+  
+  //QUESTION:  Can we create some thread that read into this array  at the same time,
+  then add up the result?
+  //ANSWER:  We will a group of threads to process these values independently.  Then,
+  add up the sume of the results!
+  [/code]
+  
+  
+  There are 2 ways of creating threads:
+  (1) extends the Thread{ }
+  (2) implements Runnable{ }
+  
+  Caution:
+  (1) Be careful about the execution of each thread.
+  i.e. which thread has a higher priority? Writing is more important then reading.
+  (2) Be aware of "DeadLock" thread: each thread locks the other so that no thread can
+  process anything further!
+  (3) If we have 2 threads that write to a file simultaneously, be aware of data corruption.
+  To avoid this, we need to "synchronicze" the thread. Synchronize means puts a lock on the
+  object!  No other thread can do anything else until that thread is finished.
+  (4) When we use the sleep() [will provide number of milliseconds], the number of milliseconds
+  will effect the outcome of thread
+  
+  If you don't setDaemon, you don't set the user thread.
+  
+  Lab?  Create 4 threads and have 1000, 2000, 3000, or 25000 elements.
+  Sum them up using 4 of the threads.
+  And see if you can time it.
+  Tell him if you see the difference
+  
+  Stack and Que for the final
+  What about the mid-term?
+  Building our own stack, link list, ques
+  

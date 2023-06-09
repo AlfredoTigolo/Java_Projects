@@ -1,0 +1,62 @@
+cs212 lecture
+1-21-03
+
+Close the database reading and writing
+
+Let the if statement check the file lenght
+Input from args, when it is running, or hard code
+
+FileReader and BufferedReader
+File class
+
+
+What class is he going over?
+
+What can't we changed in Project 1?
+  - can't change the method signature
+  - run method has a boolean method as a parameter [extra]
+  - run decides what thread to run
+  - makes it more complicated if you run a boolean method
+  - put all thread methods inside the run method
+  
+  OptimalThread.run(boolean?)
+  - checking which one is called
+  calc and run(boolean) is something
+  
+  Need to sychronize if you don't use sleep method of the thread
+  
+  Setting the priorities for threads
+  cannot change datatype of the run, but we can pass as many parameters as we want
+  think of it as the main method with run
+  
+  applet versus application
+  there is a main in GUIs, but applet must reside in a broswer
+  
+  IMPORTANT
+  Learn how to read a file
+  Learn how to minipulate file
+  LearN how to write to a file
+  
+  InputStreamReader <- this is keyboard input
+  FileReader <- this is the reads a file for input
+  
+  init and applet is like the 'run method'
+  
+  If you want to read another database, you must learn how to use JBDC?
+  Creating a csv file we must include a comma.  NO!
+  
+  Must use try and catch when opening a file
+  
+  Can we still get extra credit?
+  The way we wrote is fundamental
+  
+  Every week, we go little by little.  Learn what is posted, then move on
+  String class, use the substring to trim
+  
+  Harding going and passing arguments through JBuilder.  That is always fun
+  We can now pass methods and Objects Cool!
+  Great, the delimiters!
+  
+ 
+  
+

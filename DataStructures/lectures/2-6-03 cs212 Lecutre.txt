@@ -1,0 +1,133 @@
+cs212 Lecture
+2-6-03
+
+CAN UNDERSTAND STACK (first in - last out)
+
+Ex:  Evaluate: "3*5+2-10/5+1"
+In order to solve this problem, we must use 'stack'
+
+Stack -> 3*
+
+Look at Java Syntax:
+
+  parseInt()
+  int[] num = new int[10];
+  String st = "Hello World":
+  char ch = 'c';
+  
+  First, we need to write a compiler.
+  Remember, each statement ends with ';' semicolon.
+  In order to evaluate lines, we look ( ) open / close parathesis.
+  With stack, we can only look at the top element
+ 
+ Stack is to evaluate matheatical expression:
+ NOTE: STACK AND QU
+  - writing compiler.
+  - comparison of everything that has a "open" and "end"
+  (num2 ^ num1 ) v (num2)
+  
+  *** What is the struture of a stack? ***
+  
+  Top most
+  
+  [--------] <- these are called 'Objects'
+  [--------]
+  [--------]
+  [--------]
+  [--------]
+  [--------]
+  
+  Bottom most
+  
+  The capacity of a stack is finite.
+    ex ie < 'less than a fix integer
+    (capacity < n); where 'n' is any integer!
+    [NOTE: IF YOU ARE VERY PICKY, capacity <= n]
+    no such thing as a prefixed capacity.
+    
+  - First, setup the capacity.
+  - There must be two boolean methods to inform the stack is FULL OR EMPTY
+  - Look at the top must element (peek()) <- peek will return void
+  - Need to add element to the stack (push())
+  - Need to take things off the stack (pop())
+  - Need to know the size, just right a method called (getSize())
+  
+  WHY CAN'T WE USE THE STACK CLASS OF JAVA?
+  Mr. Jen Chen response:
+  Under JDK 1.3.1 Help menu
+  public class Stack extends Vector implements
+  Look at the Vector Classs
+  Example code
+  [code]
+    String st = "....";
+    Vector vec = new Vector (max);
+    ver.add(21, st); //THIS WILL BREAK THE STACK STRUCTURE
+    The Stack breaks the stack structure.
+    
+      [--------] o[50]
+      [--------]
+      [--------] o[21] <- the code inserts here.
+      [--------]
+      [--------]
+      [--------] o[o]
+      
+  Bottom most
+    
+  [/code]
+  
+  
+  [code]
+  public class Stack {
+  
+    int capacity = 32; //32 bit Operating System
+    //int size = 0; //The max for size is  (capacity -1)
+    int size = -1; //because of the isEmpty method
+    Ojbect[] o = Object[capacity];
+    
+    public Stack() { }
+    
+    public Stack(Object[] ob, int max) {
+      this.capacity = max;
+      this.o = ob;
+    }
+    
+    public boolean isFull() {
+      boolean tmp = false;
+      if (size == capacity -1)
+        tmp = true
+       return tmp;
+    }
+    
+    public boolean isEmpty() {      
+      boolean tmp = false;
+      if (size < 0) //the size is changed from 0 to -1
+        tmp = true;
+      return tmp;
+    }
+    
+    //need to return plus one because size, is the index
+    public int getSize () { return this.size+1; }
+    
+    push void push(Object obj) {
+      if(this.isFull)
+        System.out.println("Stack is full");
+      else
+        o[++size] = obj; //increment the size
+    }
+    
+    public Object pop() {
+      Object tmp = null;       
+      if(this.isEmpty)
+        System.out.println("Stack is empty");
+      else
+        tmp=o[size--];
+       return tmp;
+    }
+    
+    want to look at the top element
+    public void peek() {
+      System.out.println(o[size]);
+    }
+  
+  }//end Stack class
+  [/code]

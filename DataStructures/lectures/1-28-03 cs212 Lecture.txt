@@ -1,0 +1,59 @@
+New examples on the website
+getFilePointer to let them know where the file is pointing to
+RandonAccessFile is the class I need to look into
+set the pointer at the end
+Need to find out the size of the file
+
+How do we get to the middle of the file?
+Pointer might not get you to the right place
+So, you need to off site a little
+Find the Min and Max of the size of the file
+
+First thread starts to find the max of the two files
+Two threads read 1 million numbers
+
+There is a file that gets it to run HTML code and other applications.  COOL!
+<TR><TD>
+Everything is done in the loop
+Must know ths specific path of the application
+
+Process proc = Runtime.getRuntime().exec("Path of your executable")
+
+Read from file and generate a file
+Review the board throughly
+
+MIDTERM IS HERE!  IN TWO WEEKS!
+MIDTERM IS HERE!  IN TWO WEEKS!
+MIDTERM IS HERE!  IN TWO WEEKS!
+Thread
+Input/OutPut/Random Access
+How do we optimize threads?
+
+Display input and output on a GUI.
+JButton
+ActionListner
+ActionEvent
+No Multimedia
+
+import java.swing.JButton;
+import java.awt.event.ActionListner;
+import java.awt.event.ActionEvent;
+
+FORMATING METHOD
+method that does indentation?
+Left Indent 30 spaces?
+column1? column2?
+String st = "Welcome to CS212";
+Method for left indent such that a user passes a string and number of space,
+then your method outputs the method?  Oh, no, centering
+
+   int i;
+   while(i<st.length) {
+     System.out.print(st.charAt(i));
+     i++;
+     
+     while (i<space) {
+       System.out.prin("   ");
+       i++;
+     }
+   }

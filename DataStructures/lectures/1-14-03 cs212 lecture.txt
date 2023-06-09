@@ -1,0 +1,118 @@
+CS212 1-14-03
+Lecture Notes
+
+//FileIO1 reads the file
+//FileIO2 parse's the file?
+
+import java.util.*;
+
+StringTokenizer strSt = new StringTokenizer("Customers.csv", ",");
+//file name and delimiter
+//StringTokenizer has how many methods?
+
+String line;
+
+
+
+while (strSt.hasMoreTokens) {
+   
+}
+
+//<-------FileIO2.txt
+
+package thread;
+import java.io.*;
+import java.util.*;
+
+public class File_IO2 {
+  public static void main(String[] args) throws IOException{
+String file = null, line;
+
+//the filename is here
+//BufferReader is used to continue your program so you can reuse the data
+//use this as an argument on the command-line
+file = "score.txt";
+BufferedReader buf = null;
+BufferedReader answer = new BufferedReader(new InputStreamReader(System.in));
+BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+int lineNum = 0;
+char ans = 'y';
+
+while(ans == 'y'){
+
+//this part reads the text line by line
+  buf = new BufferedReader(new FileReader(file));
+//this code reads one line at a time  
+ //the csv file is the field names skips the file name usually the field names
+  line = buf.readLine();
+  StringTokenizer stToken;
+  int seperator = 1;
+
+  while((line = buf.readLine()) != null){
+  
+  //the token here is the ","
+    stToken = new StringTokenizer(line, ",");
+    while(stToken.hasMoreTokens()){
+ /*
+   Take the mid-term and the final and divide by three.
+   How do we just print out the final?
+ */
+  //this is the if statement that has 4 files called seperator
+      if(seperator % 4 == 1){
+  
+  //always trim a string if someone passes a string to you.
+        String name = stToken.nextToken().trim();
+        System.out.println("Name is : " + name);
+        seperator++;
+      //}else{
+   else if (seperator % 4 == 0)
+        int val = Integer.parseInt(stToken.nextToken().trim());
+        System.out.println("The value of the token is: " + val);
+        seperator++;
+      }//end of IF()
+   else{
+   //take care of the 
+   	stToken.nextToken();
+   	seperator++;
+   	}
+      }//end of WHILE(Tokenizer)
+    }  //END of inner WHILE.
+
+System.out.print("Enter <n/N> to quit, else press any key: ");
+  String input = answer.readLine();
+  if(input.length() == 0)  //If the user presses the <ENTER> key.
+    ans = 'y';  //Assume that the user'd like to continue, so the answer is 'y'.
+  else
+    ans = input.charAt(0);
+  }  //END of WHILE
+  }  //END of main()
+}  //END of class FILE_IO2
+
+/*  Here is the file score.txt that is used in this program.---------------
+// use notepad to create a file called score.txt
+Maria Gozalez, 89,83,91
+John Smith, 92,88,85
+Jimmy Chang, 78,81,83
+Jenny Williams,77,80,85
+Abraham Nore,90,92,95
+*/
+
+
+GREAT, MORE ADVANCED STUFF!
+Contest this Friday. COOLCOM!
+
+If you cannot open a database, exit the program.
+My program needs to be robust and must do heavy error checking.
+No erros, speeds, displayed nicely.
+
+If ( fieldNumber % 10 == fieldnumber)  //use this code to pull out the number of fields
+Calender class and Date class to format classes.
+
+Lab1
+Take the Customers.csv
+File_IO2.txt
+Read the Customers.csv.
+Create two threads, both threads are reading the .csv file.  Parse the record using tokenizer.
+	- one thread will display the content of the .csv table
+	- the other thread will display the Customer Id and the contact Name
+	where the country is in Germany

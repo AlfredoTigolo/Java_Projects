@@ -1,0 +1,18 @@
+cs212
+1-30-03
+lecture
+
+What do need to modify for project #2
+Save the file of project as a microsoft word as *.rtf
+Java saves it as an rtf or Java saves it as an rtf?
+Querying name and first name
+If both fields are entered, only query with the student of first name
+SQL coding without sql?
+Add a scroll bar? <- is that a gui?
+applet cannot open a file
+
+hashtable and stack.  Linked list
+double linked list <- wow!
+Just a regular stack?
+Write from beginning to the end stack.
+If you know stack, you know que

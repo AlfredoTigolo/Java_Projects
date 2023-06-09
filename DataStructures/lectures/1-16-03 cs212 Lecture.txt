@@ -1,0 +1,42 @@
+1-16-03 cs 212 Lecture
+
+jupiter/tmp/grades.csv
+subsititue customers.csv with grades.csv
+
+Xtra credit -> create a class called 
+	class dataThread { }
+	- file: String
+	pulic vod+getData (String filename) { show the data }
+	//most of the work is down in get data
+	public void run()
+	
+	//what does the run method do in this class?
+	method called getFinal has two strings
+	  - student name
+	  - final grade
+
+Driver:
+	- create 2 objects of type dataThread
+	- start the thread
+	- run the thread
+	* both threads are unsync -> need to synchronize
+
+So, far, we have two assignments.
+	For Customer.csv,
+	Create a class that does the following.
+	Read the file and tokenize it?
+	Then, only show the people in Germany.
+	
+	If you create a thread and access one object, there is no problem reading.
+	But, the only time you will have trouble is writing.
+	
+	what does lock on an object mean?  Means, the thread is synchronized so that thread
+	has to finish first before the other threads can run.
+	How do we get the thread to start each thread.
+	Create a method that does the task you want.
+	Read into a table, minuplate the data, and display the answer.
+	Eugene, what is the answer Eugene?
+	The Grades.csv calculates the average, the other calculates the sum.
+	
+Synchronized modifier
+	Only applies to methods, Only one thread at a time can execute this method.

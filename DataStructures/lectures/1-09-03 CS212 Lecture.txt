@@ -1,0 +1,36 @@
+CS212
+1-9-03
+Lecture
+
+What happens when an *.exe program runs?
+It starts a process?
+
+Why do we have to run a thread, we always have to catch the exception?
+Sub - processing and the whole process
+
+When the main thread is cut off, the other methods get cut off.
+They main method is a thread process.
+
+Missed his explaination of the Thread Examples?
+
+Difference between JPR and JPX? 
+
+What does it mean when you importing? Loading the library onto the program?
+
+Review the Thread class and the wonder methods for it.
+
+Concentrate on the current project.  For example is threads.
+
+Book should mention something about effenciency.
+
+Arrays refernces to an address?
+
+Keyboard is a bufferzone when you are reading into a file
+BufferReader and BufferWriter 
+System.in?  Usering typing into the keyboard
+Review the FileIO class of Java. [java.io]
+
+Two files to review is the FileIO.java and Customer.csv files
+
+Parse the file that is being read?
+
