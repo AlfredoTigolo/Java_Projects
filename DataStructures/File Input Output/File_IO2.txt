@@ -1,0 +1,52 @@
+package thread;
+import java.io.*;
+import java.util.*;
+
+public class File_IO2 {
+  public static void main(String[] args) throws IOException{
+String file = null, line;
+file = "score.txt";
+BufferedReader buf = null;
+BufferedReader answer = new BufferedReader(new InputStreamReader(System.in));
+BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+int lineNum = 0;
+char ans = 'y';
+
+while(ans == 'y'){
+  buf = new BufferedReader(new FileReader(file));
+  line = buf.readLine();
+  StringTokenizer stToken;
+  int seperator = 1;
+
+  while((line = buf.readLine()) != null){
+    stToken = new StringTokenizer(line, ",");
+    while(stToken.hasMoreTokens()){
+      if(seperator % 4 == 1){
+        String name = stToken.nextToken().trim();
+        System.out.println("Name is : " + name);
+        seperator++;
+      }else{
+        int val = Integer.parseInt(stToken.nextToken().trim());
+        System.out.println("The value of the token is: " + val);
+        seperator++;
+      }//end of IF()
+      }//end of WHILE(Tokenizer)
+    }  //END of inner WHILE.
+
+System.out.print("Enter <n/N> to quit, else press any key: ");
+  String input = answer.readLine();
+  if(input.length() == 0)  //If the user presses the <ENTER> key.
+    ans = 'y';  //Assume that the user'd like to continue, so the answer is 'y'.
+  else
+    ans = input.charAt(0);
+  }  //END of WHILE
+  }  //END of main()
+}  //END of class FILE_IO2
+
+/*  Here is the file score.txt that is used in this program.---------------
+Maria Gozalez, 89,83,91
+John Smith, 92,88,85
+Jimmy Chang, 78,81,83
+Jenny Williams,77,80,85
+Abraham Nore,90,92,95
+*/

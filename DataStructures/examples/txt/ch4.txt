@@ -1,0 +1,302 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.1 Iterative Sum of Squares */
+
+   |  int sumSquares(int m, int n) {
+   |  
+   |    int i, sum;        
+   |                                             // recall that the assignment
+ 5 |    sum = 0;                                         // sum += i*i has the
+   |    for (i = m; i <= n; i++) sum += i*i;     // same effect in Java as the
+   |    return sum;                              // assignment sum = sum + i*i
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 4.2 Recursive Sum of Squares */
+
+   |  int sumSquares(int m, int n) {
+   |  
+   |   // to compute the sum of the squares in the range m:n, where m <= n
+   |  
+ 5 |    if (there is more than one number in the range m:n) {
+   |      (the solution is gotten by adding the square of m to)
+   |      (the sum of the squares in the range m+1:n)
+   |    } else {
+   |      (there is only one number in the range m:n, so m == n, and)
+10 |      (the solution is therefore just the square of m)
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.3 Recursive Sum of Squares */
+
+   |  int sumSquares(int m, int n) {                          // assume m <= n
+   |  
+   |    if (m < n) {
+   |      return  m*m + sumSquares(m+1,n);                    // the recursion
+ 5 |    } else {
+   |      return m*m;                                         // the base case
+   |    }  
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.4 Going-Down Recursion*/
+
+   |  int sumSquares(int m, int n) {                          // assume m <= n
+   |  
+   |    if  (m < n) {
+   |       return sumSquares(m, n - 1) + n*n;                 // the recursion
+ 5 |    } else {
+   |      return n*n;                                         // the base case
+   |    }
+   |    
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 4.5 Strategy for Going-Down Recursion */
+
+   |  int sumSquares(int m, int n) {
+   |  
+   |   // to compute the sum of the squares in the range m:n, where m <= n
+   |  
+ 5 |    if (there is more than one number in the range m:n) {
+   |      (the solution is gotten by adding the square of n to)
+   |      (the sum of the squares in the range m:n-1)
+   |    } else {
+   |      (there is only one number in the range m:n, so m == n, and)
+10 |      (the solution is therefore just the square of n)
+   |    }
+   |    
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.6 Recursion Combining Two Half-Solutions */
+
+   |  int sumSquares(int m, int n) {                          // assume m <= n
+   |  
+   |    int middle;
+   |  
+ 5 |    if (m == n) {
+   |      return m*m;                                         // the base case
+   |    } else {
+   |      middle = (m+n) / 2;
+   |      return sumSquares(m, middle) + sumSquares(middle +1, n) ;
+10 |    }
+   |  }
+
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.11 Iterative Factorial */
+
+   |  int factorial(int n) {
+   |  
+   |    int i, f;
+   |
+ 5 |    f = 1;                                   // recall that f *= i has the
+   |    for (i=2; i <= n; i++)  f *= i;      // same effect as f = f*i in Java
+   |    return f;
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.12 Recursive Factorial */
+
+   |  int factorial(int n) {
+   |  
+   |    if (n == 1) {
+   |      return 1;                                               // base case
+ 5 |    } else {
+   |      return  n * factorial(n - 1);                           // recursion
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 4.13 Multiplying m:n Together Using Half-Ranges */
+
+   |  int product(int m, int n) {
+   |  
+   |   // to compute the product of the integers from m to n
+   |  
+ 5 |    if (the range m:n has only one integer in it) {
+   |      (return m as the solution, since m == n)            // the base case
+   |    } else {
+   |      (the range m:n must have more than one integer in it, so)
+   |      (compute the midpoint of m:n as the value of the variable middle)
+10 |      (and return the product of the integers in the range m:middle)
+   |      (times the product of the integers in the range middle+1:n)
+   |    }
+   |    
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.14 Multiplying m:n Together Using Half-Ranges */
+
+   |  int product(int m, int n) {                             // assume m <= n
+   |  
+   |    int middle;
+   |  
+ 5 |    if (m == n) {
+   |      return m;                                           // the base case
+   |    } else {
+   |      middle = (m+n) / 2;
+   |      return product(m, middle) * product(middle+1, n);
+10 |    }
+   |    
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.15 Classes Defining Linked Lists and ListNodes */
+
+   |  class ListNode {                             // define linked list nodes
+   |    String    airport;                        // holding airports as items
+   |    ListNode     link;
+   |  }
+ 5 |    
+   |  class LinkedList {                    // a linked list has a header node
+   |    int        length;                   // having an integer length field
+   |    ListNode:  firstNode;             // and a firstNode field that points
+   |                                                // to its linked ListNodes
+10 |      
+   |    void reverse() {                  // insert here the text of one of the
+   |      . . .                           // Programs 4.16 or 4.19 below giving
+   |    }                                    // a LinkedList's reverse() method
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.16 Iterative List Reversal Method */
+
+   |  void reverse() {                  // a method to reverse a LinkedList, L
+   |  
+   |    ListNode R, N, L1;
+   |
+ 5 |    L1 = firstNode;  // L1 points to the first node of the list to reverse
+   |    R = null;        // initialize R, the reversed list, to the empty list
+   |    while (L1 != null) {
+   |      N = L1;                            // let N point to L1's first node
+   |      L1 = L1.link;            // now, let L1 point to the remainder of L1
+10 |      N.link = R;                               // link N to the rest of R
+   |      R = N;                     // and make R point to its new first node
+   |    }
+   |    firstNode = R;  // finally, let firstNode point to the reversed list R
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 4.18 For Reversing a List, L */
+
+   |  ListNode reverse() {
+   |  
+   |    (let L point to the firstNode of the linked list of ListNodes to be reversed)
+   |
+ 5 |    if (L is the empty list) {
+   |      (the result is the reverse of the empty list)           // base case
+   |    } else {                               // otherwise, if L is non-empty
+   |      (partition the list L into its head and tail.)
+10 |      (then, concatenate the reverse of the tail of L)   // recursion step
+   |      (with the head of L and let firstNode point to)
+   |      (the result of the concatenation.)
+   |    }
+   |  
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.19 Refinement for reverse(L) */
+
+   |  void reverse() {           // the reverse() method applies the auxiliary
+   |    firstNode = reverse1(firstNode);    // method reverse1(L) below to the
+   |  }                           // linked list L pointed to by the firstNode
+   |                                    // field of the LinkedList header node
+ 5 |
+   |  ListNode reverse1(ListNode L) {
+   |    if (L == null) {
+   |      return null;                                            // base case
+   |    } else { 
+10 |      ListNode head = L;             // partition L into its head and tail
+   |      ListNode tail = L.link;
+   |      head.link = null;
+   |      return concat(reverse1(tail), head);               // recursion step
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.20 Reversing the Items  A[m:n] of Array A */
+
+   |  void reverseArray(int[] A, int m, int n) {  // to reverse the items from
+   |                                              // m through n in an array A
+   |    if (m < n) {
+   |      int temp = A[m];                            // first, swap the edges
+ 5 |      A[m] = A[n];
+   |      A[n] = temp;
+   |      reverseArray(A, m + 1, n - 1);       // and then, reverse the center
+   |    }
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 4.22 Recursive moveTowers Procedure */
+
+   |  void moveTowers(int n, int start, int finish, int spare) {
+   |  
+   |   // to move a tower of n disks on the start-peg to the finish-peg
+   |   // using the spare-peg as an intermediary.
+ 5 |
+   |      if (n == 1) {
+   |        (move one disk directly from start-peg to finish-peg)
+   |      } else {
+   |        (move a tower of n - 1 disks from start-peg to spare-peg)
+10 |        (move one disk directly from start-peg to finish-peg)
+   |        (move a tower of n - 1 disks from spare-peg to finish-peg)
+   |      }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 4.23 Recursive Towers of Hanoi Solution */
+
+   |  void moveTowers(int n, int start, int finish, int spare) {
+   |  
+   |   // to move a tower of n disks on the start-peg to the finish-peg
+   |   // using the spare-peg as an intermediary.
+ 5 |  
+   |      if (n == 1) { 
+   |        System.out.println("move a disk from peg "+ start +" to peg "+ finish);
+   |      } else {
+   |        moveTowers(n - 1, start, spare, finish);
+10 |        System.out.println("move a disk from peg "+ start +" to peg "+ finish);
+   |        moveTowers(n - 1, spare, finish, start);
+   |      }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+

@@ -1,0 +1,46 @@
+package findmax;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2003</p>
+ * <p>Company: </p>
+ * @author unascribed
+ * @version 1.0
+ */
+
+///////    MaxTest.java    ///////
+
+public class MaxTest{
+  public static void main(String[] args) throws InterruptedException {
+     int maxsize = 50;
+     int[] a = new int[maxsize];
+     for (int i=0; i < maxsize; i++){   // random generator
+      a[i] = (int) (100*Math.random());
+          if((i + 1)%10 != 0)
+            System.out.print(a[i] + "\t");
+          else
+            System.out.print(a[i] + "\n");
+     }
+     int nt=0;
+     if ( args.length == 1 )
+         nt = Integer.parseInt(args[0]);
+     if ( nt <= 0 ) nt = 4;
+     MaxGuard ans = new MaxGuard(a[0]);  //set a[0] to be the largest value at the moment.
+     FindMax[] sub_findmax = new FindMax[nt];  //create arrays of object FindMax{}.
+     int range = maxsize/nt;  //evenly distribute all elements into the arrays created above.
+     int high, low = 0;
+     for (int i=0; i < nt-1; i++) {  //assign elements in the main array to the sub-arrays.
+          high = low + range -1;
+          sub_findmax[i] = new FindMax(a, low, high, ans);
+          low = high + 1;
+     }  //end of FOR
+     sub_findmax[nt-1] = new FindMax(a, low, (maxsize - 1), ans);  //the last sub-array.
+     for (int i=0; i < nt; i++)
+         sub_findmax[i].start();                          // (E)
+     for (int i=0; i < nt; i++)
+         sub_findmax[i].join();
+     System.out.println("Maximum = " + ans.getMax());
+  } //end of main()
+}//end of class MaxTest{}
+

@@ -1,0 +1,45 @@
+
+/*--------------------------------------------------------------------------*/
+
+    /** Program 1.3 Finding the First Negative Integer in an Integer Array */
+
+    |  import java.applet.Applet;
+    |  import java.io.*;
+    |       
+    |  public class ProgramFormatExample extends Applet {
+ 5  |       
+    |    public final static int ARRAY_SIZE = 100;
+    |       
+    |          
+    |    int find(int[ ] A) {            // find operates on integer arrays, A
+10  |          
+    |      int j;                 // j is an index variable used in the search
+    |            
+    |      for ( j = 0; j < ARRAY_SIZE; j++ ) {      // search upward starting
+    |                                                         // at position 0
+15  |              if (A[j] < 0) {                      // if A[j] is negative
+    |                      return j;       // return its index j as the result
+    |              }       
+    |      }
+    |            
+20  |      return -1;          // return -1 if no negative integers were found
+    |    }
+    |       
+    |    public void init( ) {
+    |          
+25  |       int[] A = new int[ARRAY_SIZE]; // declare A to be an integer array
+    |       int i;        // let i be an index variable used for intialization
+    |       
+    |    // initialize array A to squares of integers. then make A[17] negative.
+    |       for (i = 0; i < ARRAY_SIZE; i++) A[i] = i*i;
+30  |       A[17] = -A[17];
+    |            
+    |    // print test results
+    |       System.out.println("First neg. integer in A is at index = " + find(A));
+    |    }
+35  |  
+    |  }
+
+
+/*--------------------------------------------------------------------------*/
+

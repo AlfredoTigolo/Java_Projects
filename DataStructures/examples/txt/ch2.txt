@@ -1,0 +1,463 @@
+
+/*--------------------------------------------------------------------------*/
+
+    /** Program 2.4 The Rectangle Class Definition */
+
+    |  public class Rectangle {
+    |    
+    |   // data fields
+    |      public int x;
+ 5  |      public int y;
+    |      public int width;
+    |      public int height;
+    |    
+    |   // constructors
+10  |  
+    |      public Rectangle() {
+    |        x = y = width = height = 0;        // set all data fields to zero
+    |      }
+    |    
+15  |      public Rectangle(int x, int y, int width, int height) {
+    |        this.x = x;                      // when the formal parameters of
+    |        this.y = y;                  // the method have the same names as
+    |        this.width = width;          // the Rectangle's data fields, they
+    |        this.height = height;          // hide the Rectangle data fields.
+20  |      }                               // Rectangle data field f must then
+    |                                               // be referenced as this.f
+    |    
+    |             // and so forth. (only two of the six Rectangle constructors
+    |                                                            // are shown)
+25  |    // methods
+    |    
+    |      public void setBounds(int x, int y, int width, int height) {
+    |        this.x = x;                          // the Rectangle data fields
+    |        this.y = y;            // must be preceded by "this." in order to
+30  |        this.width = width;      // distinguish them from the identically
+    |        this.height = height;                  // named formal parameters
+    |      }                                       // that hide them from view
+    |      
+    |      public void translate(int dx, int dy) {       // move the Rectangle
+35  |        x += dx;                           // dx pixels to the right, and
+    |        y += dy;                                        // dy pixels down
+    |      }
+    |     
+    |              // and so forth. (only two of the sixteen Rectangle methods
+40  |                                                               are shown)
+    |  }                                            // end of class definition
+
+
+/*--------------------------------------------------------------------------*/
+
+    /** Program 2.5 The DragRect Class Definition */
+
+    |  class DragRect extends Rectangle {
+    |  
+    |    void normalize() {
+    |      if (width <0) {             // if the rectangle's width is negative
+ 5  |        x += width;         // move its x-coordinate to the left side and
+    |        width = - width;    // change its width from negative to positive
+    |      }
+    |      if (height <0) {
+    |        y += height;        // similarly, if its height is negative, move
+10  |        height = - height;   // y up and change its height to be positive
+    |      }
+    |    }
+    |  
+    |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+    /** Program 2.6 The mouseDragged Event-Handler Method */
+
+    |  public void mouseDragged(MouseEvent event) {
+    |    dragRect.setBounds(anchorPoint.x, anchorPoint.y,
+    |                       event.getX() - anchorPoint.x,
+    |                       event.getY() - anchorPoint.y);
+ 5  |    dragRect.normalize();
+    |    repaint();
+    |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+    /** Program 2.7 The DrawRect Applet */
+
+    |  import java.applet.Applet;
+    |  import java.awt.*;
+    |  
+    |  public class DrawRect extends Applet
+ 5  |        implements MouseListener, MouseMotionListener  {
+    |    
+    |    DragRect dragRect = new DragRect();   // define the applet's dragRect
+    |    Point anchorPoint = new Point(0,0);    // and anchorPoint data fields
+    |  
+10  |    public void init()  {        // during applet initialization, add the
+    |      addMouseListener(this);           // listeners that intercept mouse
+    |      addMouseMotionListener(this);   // events and invoke their handlers
+    |    }
+    |  
+15  |    public void mousePressed(MouseEvent event) {           // to handle a
+    |      anchorPoint.x = event.getX();  // mousePressed event, set the (x,y)
+    |      anchorPoint.y = event.getY();     // coordinates of the anchorPoint
+    |    }                                 // to those of the mouse-down point
+    |    
+20  |    public void mouseDragged(MouseEvent event) {      // when mouse moves
+    |      dragRect.setBounds(anchorPoint.x, anchorPoint.y,    // during mouse
+    |                         event.getX() - anchorPoint.x,       // dragging,
+    |                         event.getY() - anchorPoint.y);        // set the
+    |      dragRect.normalize();               // bounds of the dragRect. then
+25  |      repaint();                              // normalize it and draw it
+    |    }
+    |    
+    |    public void mouseMoved(MouseEvent event) {}      // blank mouse event
+    |    public void mouseReleased(MouseEvent event) {}    // handlers must be
+30  |    public void mouseEntered(MouseEvent event) {}  // given to supply the
+    |    public void mouseExited(MouseEvent event) {}    // implementations of
+    |    public void mouseClicked(MouseEvent event) {} // all listener methods
+    |                                                // not used by the applet
+    |    public void paint(Graphics g) {
+35  |      g.drawString("drag mouse to draw a rectangle",30,10);
+    |      g.drawRect(  dragRect.x, dragRect.y,           // draw the dragRect
+    |            dragRect.width, dragRect.height);            // on the screen
+    |    }
+    |  
+40  |  } // end applet
+    |  
+    |  class DragRect extends Rectangle{  // the DragRect class is a subclass
+    |    void normalize() {                         // of the Rectangle class
+    |      if (width <0) {                               // that introduces a
+45  |        x += width;                                   // new normalize()
+    |        width = - width;                                       // method
+    |      }
+    |      if (height <0) {
+    |        y += height;
+50  |        height = - height;
+    |      }
+    |    }
+    |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+    /** Program 2.13 The Definition of the Abstract Shape Class */
+
+    |  abstract class Shape {
+    |    
+    |    protected Color color;
+    |    protected DragRect boundsBox;        // the boundsBox is the smallest
+ 5  |                                         // rectangle enclosing the shape
+    |  
+    |    abstract void draw(Graphics g);   // abstract placeholder method that
+    |                                       // gets instantiated in subclasses
+    |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+    /** Program 2.14 The Definition of the HollowOval Class */
+
+    |  class HollowOval extends Shape {
+    |  
+    |    void draw(Graphics g) {
+    |      g.setColor(Color.black);
+ 5  |      g.drawOval(boundsBox.x, boundsBox.y,
+    |                 boundsBox.width, boundsBox.height);
+    |    }
+    |  
+    |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+    /** Program 2.15 The Definition of the FilledOval Class */
+
+    |  class FilledOval extends HollowOval {
+    |
+    |    void draw(Graphics g) {
+    |      g.setColor(color);
+ 5  |      g.fillOval(boundsBox.x, boundsBox.y,
+    |                 boundsBox.width, boundsBox.height);
+    |      super.draw(g);                      // call the parent class's draw
+    |    }                                      // method to draw a wire frame
+    |                                                // around the filled oval
+    |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+    /** Program 2.16 The DrawShapes Applet */
+
+    |  import java.applet.Applet;
+    |  import java.util.*;                        // contains the Vector class
+    |  import java.awt.*;       // "awt" is short for "abstract windows tools"
+    |  
+ 5  |  public class DrawShapes extends Applet
+    |        implements MouseListener, MouseMotionListener  {
+    |  
+    |    Vector  shapeList:            // maintains a list of the drawn shapes
+    |    
+10  |    Choice  shapeChoice;                // a popup menu for shape choices
+    |    
+    |    Choice  colorChoice;                // a popup menu for color choices
+    |    
+    |    Choice  fillChoice;       // a popup menu for the choice of filled or
+15  |                                                         // hollow shapes
+    |    Point  anchorPoint;                   // saves the coordinates of the
+    |                                                    // mousePressed point
+    |    Shape  s;             // the shape s will be a filled or hollow oval,
+    |                                        // rectangle or rounded rectangle
+20  |    Dimension offScreenDimension;       // the dimension of the offscreen
+    |                                                         // drawing image
+    |    Image  offScreenImage;           // offscreen image used to eliminate
+    |                                                              // flashing
+    |    Graphics offScreenGraphics;         // a graphics drawing context for
+25  |                                                   // the offscreen Image
+    |  
+    |  /** create the DrawShapes Graphical User Interface (GUI) */
+    |  public void init() {
+    |    shapeList = new Vector(10);    // let the shapeList's initial capacity
+30  |    anchorPoint = new Point(0,0);                                //  be 10
+    |    
+    |    shapeChoice = new Choice();                  // create a popup menu of
+    |    shapeChoice.addItem("Oval");                   // three shape choices:
+    |    shapeChoice.addItem("Rectangle");                  // Oval, Rectangle,
+35  |    shapeChoice.addItem("RoundRect");                     // and RoundRect
+    |    add(shapeChoice);
+    |    
+    |    colorChoice = new Choice();      // create a popup menu of three color
+    |    colorChoice.addItem("Red");          // choices: Red, Yellow, and Blue
+40  |    colorChoice.addItem("Yellow");
+    |    colorChoice.addItem("Blue");
+    |    add(colorChoice);
+    |    
+    |    fillChoice = new Choice();          // create a popup menu of two fill
+50  |    fillChoice.addItem("Filled");            // choices: Filled and Hollow
+    |    fillChoice.addItem("Hollow");
+    |    add(fillChoice);
+    |    
+    |    addMouseListener(this);           // to enable the applet to intercept
+55  |    addMouseMotionListener(this);               // and handle mouse events
+    |    
+    |  } // end init()
+    |  
+    |  /** handle mouse events */
+ 60 |  public void mousePressed(MouseEvent event) {
+    |    
+    |   // create a new shape of appropriate type
+    |      String shapeString = shapeChoice.getSelectedItem();
+    |      String colorString = colorChoice.getSelectedItem();
+ 65 |      String fillString = fillChoice.getSelectedItem();
+    |      
+    |      if (fillString.equals("Hollow")) {
+    |        if (shapeString.equals("Oval")) {
+    |          s = new HollowOval();
+ 70 |        } else if (shapeString.equals("Rectangle")){
+    |          s = new HollowRectangle();
+    |        } else {
+    |          s = new HollowRoundRect();
+    |        }
+ 75 |      } else {        // create a filled shape
+    |        if (shapeString.equals("Oval")) {
+    |          s = new FilledOval();
+    |        } else if (shapeString.equals("Rectangle")){
+    |          s = new FilledRectangle();
+ 80 |        } else {
+    |          s = new FilledRoundRect();
+    |        }
+    |      }
+    |          
+ 85 |   // set the new shape's color
+    |      if (colorString.equals("Red")) {
+    |        s.color = Color.red;
+    |      } else if (colorString.equals("Yellow")){
+    |        s.color = Color.yellow;
+ 90 |      } else {
+    |        s.color = Color.blue;
+    |      }
+    |      
+    |   // let the shape's boundsBox be an empty DragRect
+ 95 |      s.boundsBox = new DragRect();
+    |            
+    |   // append the new shape to end of the shapeList
+    |      shapeList.addElement(s);
+    |  
+100 |   // save the mouse down (x,y) coordinates as the anchorPoint
+    |      anchorPoint.x = event.getX();
+    |      anchorPoint.y = event.getY();
+    |  
+    |  }//end mousePressed
+105 |  
+    |  /** we must implement all unused mouse event methods using blank */
+    |  /** methods in order to satisfy the compiler that we have implemented */
+    |  /** the entire MouseListener and MouseMotionListener interfaces */
+    |  public void MouseEntered(MouseEvent event) {}
+110 |  public void MouseExited(MouseEvent event)  {}
+    |  public void MouseClicked(MouseEvent event) {}
+    |  public void MouseMoved(MouseEvent event)   {}
+    |  
+    |  public void mouseDragged(MouseEvent event) {
+115 |    // retrieve the boundsBox rectangle of Shape s
+    |      DragRect dragRect = s.boundsBox;
+    |      dragRect.setBounds(         // set the dragRect to a rectangle with
+    |            anchorPoint.x, anchorPoint.y,         // the mouse drag point
+    |            event.getX() - anchorPoint.x,          // and the anchorPoint
+120 |            event.getY() - anchorPoint.y );        // at opposite corners
+    |      
+    |      dragRect.normalize();           // make sure the dragRect has (x,y)
+    |                                       // as its top-left corner, and has
+    |                                           // a positive width and height
+125 |  
+    |    // draw all the shapes in the applet window
+    |      repaint();
+    |  
+    |  } // end mouseDragged
+130 |  
+    |
+    |
+    |  public void mouseReleased(MouseEvent event) {
+    |    repaint();
+135 |  }// end mouseReleased
+    |  
+    |  
+    |  
+    |  public void paint(Graphics g) {
+140 |    update(g);
+    |  }
+    |  
+    |
+    |  /** draw all the shapes. */
+145 |
+    |  public void update(Graphics g) {
+    |                                   // get the width and height dimensions
+    |      Dimension d = getSize();            // of the applet's drawing area
+    |  
+150 |   // create an off-screen graphics drawing environment if none existed
+    |   // or if the user resized the applet drawing area to a different size
+    |      if ( (offScreenGraphics == null)
+    |           || (d.width != offScreenDimension.width)
+    |           || (d.height != offScreenDimension.height) ) {
+155 |          offScreenDimension = d;
+    |          offScreenImage = createImage(d.width,d.height);
+    |          offScreenGraphics = offScreenImage.getGraphics();
+    |      }
+    |    
+160 |   // erase the previous image
+    |      offScreenGraphics.setColor(getBackground());
+    |      offScreenGraphics.fillRect(0,0,d.width,d.height);
+    |    
+    |   // paint a raised border around the drawing area
+165 |      offScreenGraphics.draw3DRect(5,30,d.width-11, d.height-31, true);
+    |      offScreenGraphics.draw3DRect(8,33,d.width-17, d.height-37, false);
+    |
+    |  
+    |   // draw all shapes on the shape list into the offscreen image
+170 |      int shapeCount = shapeList.size();
+    |      for (int i = 0; i < shapeCount; i++) {
+    |        s = (Shape)shapeList.elementAt(i);
+    |        s.draw(offScreenGraphics);                 // invoke each shape's
+    |                                                // individual draw method
+175 |      }
+    |  
+    |   // paint the offscreen image to the applet viewing window
+    |      g.drawImage(offScreenImage,0,0,this);
+    |  
+180 |  }//end of update() method
+    |  
+    | }//end of DrawShapes Applet
+    |  
+    |  
+185 |   /** a DragRect extends a Rectangle to include the normalize() method */
+    |   class DragRect extends Rectangle {
+    |    void normalize() {
+    |      if (width <0) {             // if the rectangle's width is negative
+    |        x += width;         // move its x-coordinate to its left side and
+190 |        width = - width;    // change its width from negative to positive
+    |      }
+    |      if (height <0) {
+    |        y += height;        // similarly, if the height is negative, move
+    |        height = - height;   // y up and change the height to be positive
+195 |      }
+    |    }
+    |   }
+    |  
+    |  
+200 |   /** the abstract shape class gives characteristics shared */
+    |   /** by all actual shape instances */
+    |   abstract class Shape {
+    |    
+    |    protected Color color;
+205 |    protected DragRect boundsBox;        // the boundsBox is the smallest
+    |                                         // rectangle enclosing the shape
+    |  
+    |    abstract void draw(Graphics g);   // abstract placeholder method that
+    |                                       // gets instantiated in subclasses
+210 |   }
+    |  
+    |  
+    |   /** draws and maintains hollow oval information. */
+    |   class HollowOval extends Shape {
+215 |    void draw(Graphics g) {
+    |      g.setColor(Color.black);
+    |      g.drawOval(  boundsBox.x, boundsBox.y,
+    |            boundsBox.width, boundsBox.height);
+    |    }
+220 |   }
+    |  
+    |  
+    |   /** draws and maintains hollow rectangle information. */
+    |   class HollowRectangle extends Shape{
+225 |    void draw(Graphics g) {
+    |      g.setColor(Color.black);
+    |      g.drawRect(boundsBox.x, boundsBox.y,
+    |            boundsBox.width, boundsBox.height);
+    |    }
+230 |   }
+    |  
+    |  
+    |   /** draws and maintains hollow rounded rectangle information. */
+    |   class HollowRoundRect extends Shape{
+235 |    void draw(Graphics g) {
+    |      g.setColor(Color.black);
+    |      g.drawRoundRect(boundsBox.x, boundsBox.y,
+    |            boundsBox.width, boundsBox.height, 20,20);
+    |    }
+240 |   }
+    |  
+    |  
+    |   /** draws and maintains filled oval information. */
+    |   class FilledOval extends HollowOval {
+245 |    void draw(Graphics g) {
+    |      g.setColor(color);
+    |      g.fillOval(boundsBox.x, boundsBox.y,
+    |          boundsBox.width, boundsBox.height);
+    |      super.draw(g);                      // call the parent class's draw
+250 |    }                                      // method to draw a wire frame
+    |   }                                            // around the filled oval
+    |  
+    |  
+    |   /** draws and maintains filled rectangle information. */
+255 |   class FilledRectangle extends HollowRectangle{
+    |    void draw(Graphics g) {
+    |      g.setColor(color);
+    |      g.fillRect(boundsBox.x, boundsBox.y,
+    |          boundsBox.width, boundsBox.height);
+260 |      super.draw(g);
+    |    }
+    |   }
+    |  
+    |  
+265 |   /** draws and maintains filled rounded rectangle information. */
+    |   class FilledRoundRect extends HollowRoundRect{
+    |    void draw(Graphics g) {
+    |      g.setColor(color);
+    |      g.fillRoundRect(boundsBox.x, boundsBox.y,
+270 |            boundsBox.width, boundsBox.height, 20, 20);
+    |      super.draw(g);
+    |    }
+    |   }
+    |
+
+
+/*--------------------------------------------------------------------------*/
+

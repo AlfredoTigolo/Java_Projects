@@ -1,0 +1,46 @@
+package mythread;
+import java.lang.Thread;
+//import java.lang.Runnable; //don't need to import because it is there default
+
+public class Thread_1{
+  public static void main(String[] args) throws InterruptedException {
+
+    EvenOdd odd = new EvenOdd(1, 20);  //created a thread
+    EvenOdd even = new EvenOdd(0, 30);
+
+    odd.run();
+    even.run();
+
+    //odd.start();
+    //even.start();
+    //odd.join();   //the main() thread waits for the child threads to finish.
+    //even.join();
+    System.out.println("\nMain thread done");
+
+  }//end of main
+}//end of class Thread_1()
+
+//class EvenOdd extends Thread{ //modifiying the class
+class EvenOdd implements Runnable {
+  private int i0, delay;
+  public EvenOdd(int first, int interval){
+    i0 = first;
+    delay = interval;
+  }
+  public void run(){
+    //try{
+      for(int i = i0; i < 30; i += 2){
+        if(i%10 != 0){
+          System.out.print(i + "\t");
+          //sleep(delay);
+        }
+        else{
+        System.out.print(i + "\n");
+         //sleep(delay);
+        }
+      //}}
+    //catch(InterruptedException e){
+      //return;
+    }
+    } //end of run()
+  } //end of class EvenOdd{}

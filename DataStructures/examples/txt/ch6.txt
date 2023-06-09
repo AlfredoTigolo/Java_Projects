@@ -1,0 +1,700 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Figure 6.3 Informal Method Calls in a Stack ADT Interface */
+
+   | /*
+   |  *  The public interface for the Stack class contains
+   |  *  the following method calls. Here, let S be a variable having
+   |  *  a Stack object as its value, and let X be a variable that
+ 5 |  *  contains a stack item.
+   |  */
+   |    
+   |    S = new Stack();                 // creates an initially empty Stack S
+   |    
+10 |    S.empty();                 // a boolean expression that is true if and
+   |                                      // only if Stack S contains no items
+   |    
+   |    S.push(X);                 // pushes an item X onto the top of Stack S
+   |    
+15 |    X = S.pop();             // removes the top item of S and puts it in X
+   |    
+   |    X = S.peek();                 // puts a copy of the top item of S in X
+   |                                             // without removing it from S
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Figure 6.4 Informal Method Calls for a Queue ADT Interface */
+
+   | /*
+   |  *   The public interface for the Queue class contains
+   |  *  the following method calls. Here, let Q be a variable having
+   |  *  a Queue object as its value, and let X be a variable that
+ 5 |  *  contains a queue item.
+   |  */
+   |    
+   |    Q = new Queue();                 // creates an initially empty Queue Q
+   |    
+10 |    Q.empty();                 // a boolean expression that is true if and
+   |                                  // only if the Queue Q contains no items
+   |    
+   |    Q.insert(X);             // inserts an item X onto the rear of Queue Q
+   |    
+15 |    X = Q.remove();                 // removes an item from the front of Q
+   |                                                       // and puts it in X
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 6.6 Applet that Checks for Balanced Parentheses */
+
+   | /*
+   |  * This applet accepts a string typed by the user that contains parentheses
+   |  * in the set '{','(','[','}',')',']' and checks it for parenthesis balance
+   |  */
+ 5 |
+   |  import java.applet.*;
+   |  import java.awt.*;
+   |
+   | public class ParenMatchApplet extends Applet implements ActionListener {
+10 |
+   |   // declare the data fields as follows:
+   |
+   |      Label
+   |        instructionLabel,         // gives the instructions for user input
+15 |        inputLabel,                           // labels the input text box
+   |        outputLabel;                         // labels the output text box
+   |
+   |      TextField
+   |        inputField,                                  // the input text box
+20 |        outputField;                                // the output text box
+   |
+   |      ParenMatcher PM;                 // the object that computes results
+   |
+   |
+25 |  // the applet's methods follow
+   |
+   |  /*----------------------------------------*/
+   |  
+   |    public void init() {
+30 |  
+   |      instructionLabel = new Label(
+   |        "Type an input expression in the box below, and press the Enter key.",
+   |        Label.CENTER);
+   |     
+35 |      add(instructionLabel);               // add the instruction label to
+   |                                                   // top of applet layout
+   |      inputLabel = new Label(" input:");
+   |     
+   |      add(inputLabel);                        // then, add the input label
+40 |     
+   |      inputField = new TextField(40);           // create a 40-column-wide
+   |                                              // input field and add it to
+   |      add(inputField);                              // the applet's layout
+   |     
+45 |      inputField.addActionListener(this);         // add the event handler
+   |     
+   |      outputLabel = new Label("output:");          // add the output label
+   |     
+   |      add(outputLabel);
+50 |     
+   |      outputField = new TextField(40);          // create a 40-column-wide
+   |                                             // output field and add it to
+   |      add(outputField);                             // the applet's layout
+   |     
+55 |      inputField.requestFocus();         // put the blinking vertical text
+   |                                      // insertion cursor in the input box
+   |      PM = new ParenMatcher();                             // create a new
+   |                                             // parenthesis matcher object
+   |    } // end init
+60 |
+   |  /*----------------------------------------*/
+   |
+   |    public void actionPerformed(ActionEvent e)  {
+   |
+65 |      PM.setInput(e.getActionCommand());   // send the input string to the
+   |                                         // parenthsis matcher object, PM.
+   |      PM.parenMatch();                      // analyze parenthesis balance
+   |
+   |      outputField.setText(PM.getOutput());   // put result in output field
+70 |
+   |    } // end actionPerformed
+   |
+   |  /*----------------------------------------*/
+   |
+75 | }// end applet
+   |
+   | /* insert the text for the class ParenMatcher from Program 6.7 here */
+   |
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 6.7 Checking for Balanced Parentheses */
+
+    | class ParenMatcher {
+    |  
+    |    private String inputString, outputString;
+    |  
+  5 |  /*----------------------------------------*/
+    |
+    |    private boolean match (char c, char d) {       // this boolean method
+    |                                                   // returns true if and
+    |      switch (c) {                                 // only if c and d are
+ 10 |        case '(' : return (d == ')');                   // matching pairs
+    |        case '[' : return (d == ']');               // of parentheses (),
+    |        case '{' : return (d == '}');              // square brackets [],
+    |        default : return false;                          // or braces { }
+    |      }
+ 15 |  
+    |    }//end match
+    |
+    |  /*----------------------------------------*/
+    |
+ 20 |    public void parenMatch() {
+    |  
+    |      Stack parenStack = new Stack(); // the parenStack holds left parens
+    |                                              // and is popped when right
+    |      int n = inputString.length();             // parens are encountered
+ 25 |  
+    |      int i = 0;      // i is the index of the ith input string character
+    |              
+    |      char c,d;                       // c and d hold characters to match
+    |  
+ 30 |      while (i < n) {
+    |  
+    |        d = inputString.charAt(i);     // d is assigned the ith character
+    |    
+    |        if (d == '(' || d == '[' || d == '{') {       // push each of the
+ 35 |                                       // three types of left parentheses
+    |          parenStack.push(new Character(d));
+    |    
+    |        } else if (d == ')' || d == ']' || d == '}') {   // match each of
+    |                                  // the three types of right parentheses
+ 40 |          if (parenStack.empty()) {
+    |      
+    |            output("More right parentheses than left parentheses");
+    |            return;
+    |      
+ 45 |          } else {
+    |      
+    |            c = ((Character)parenStack.pop()).charValue();
+    |        
+    |            if (!match(c,d)) {  // if c doesn't match the right parenthesis
+ 50 |        
+    |              output("Mismatched parentheses: "+ c +" and " + d);
+    |              return;
+    |        
+    |            }//end if
+ 55 |      
+    |          }//end if
+    |      
+    |        }//end if
+    |    
+ 60 |        ++i;                  // increase index i to scan next input char
+    |      
+    |      }//end while
+    |  
+    |  
+ 65 |      if (parenStack.empty()) {
+    |  
+    |        output("Parentheses are balanced properly");
+    |    
+    |      } else {
+ 70 |  
+    |        output("More left parentheses than right parentheses");
+    |  
+    |      }//end if
+    |    
+ 75 |    }//end parenMatch
+    |
+    |  /*----------------------------------------*/
+    |
+    |    private void output(String s) {
+ 80 |  
+    |      outputString = s;
+    |  
+    |    }//end output
+    |
+ 85 |  /*----------------------------------------*/
+    |
+    |    public void setInput(String input) {
+    |  
+    |      inputString = input;
+ 90 |  
+    |    }//end setInput
+    |  
+    |  /*----------------------------------------*/
+    |
+ 95 |    public String getOutput() {
+    |
+    |      return outputString;
+    |  
+    |    }//end getOutput
+100 |  
+    |  /*----------------------------------------*/
+    |
+    |
+    | }//end class ParenMatcher
+105 |
+    | /* insert here the text of the Stack class from either Program 6.11 or 6.12 */
+    |
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 6.10 The PostfixInterpreter Class That Evaluates a Postfix String */
+
+    | class PostfixInterpreter {
+    |
+    |    private String postfixString, outputString;
+    |  
+  5 |  /*----------------------------------------*/
+    |
+    |    private boolean isOperator(char c) {
+    |
+    |      return (c == '+'  ||  c == '-'  ||  c == '*'  ||  c == '/'  ||  c == '^');
+ 10 |    
+    |    }//end isOperator
+    |
+    |  /*----------------------------------------*/
+    |
+ 15 |    private boolean isSpace(char c) {
+    |
+    |      return (c == '  ');
+    |    
+    |    }//end isSpace
+ 20 |
+    |  /*----------------------------------------*/
+    |
+    |    public void interpretPostfix() {
+    |
+ 25 |      Stack evalStack = new Stack();
+    |
+    |      double leftOperand, rightOperand;
+    |  
+    |      char c;
+ 30 |    
+    |      StringTokenizer parser = new StringTokenizer(postfixString,"+-*/^  ",true);
+    |  
+    |      while (parser.hasMoreTokens()) {         // provided there are more
+    |                                           // tokens in the postfixString
+ 35 |        String token = parser.nextToken();          // get the next token
+    |                                                          // and let c be
+    |        c = token.charAt(0);         // the first character of this token
+    |    
+    |        if ( (token.length() == 1) && isOperator(c) ) {    // if token is
+ 40 |                                                          //  an operator
+    |          rightOperand = ((Double)evalStack.pop()).doubleValue();
+    |          leftOperand = ((Double)evalStack.pop()).doubleValue();
+    |      
+    |          switch (c) {                            // perform the operation
+ 45 |      
+    |           case '+': evalStack.push(new Double(leftOperand+rightOperand));
+    |                     break;
+    |           case '-': evalStack.push(new Double(leftOperand-rightOperand));
+    |                     break;
+ 50 |           case '*': evalStack.push(new Double(leftOperand*rightOperand));
+    |                     break;
+    |           case '/': evalStack.push(new Double(leftOperand/rightOperand));
+    |                     break;
+    |           case '^': evalStack.push(new Double(Math.exp(
+ 55 |                     Math.log(leftOperand)*rightOperand) ) );
+    |                     break;
+    |           default:
+    |                     break;
+    |          }//end switch
+ 60 |    
+    |        } else if ( (token.length() == 1) && isSpace(c) ) {    // else if
+    |                                                     // token was a space
+    |          ;                                                  // ignore it
+    |    
+ 65 |        } else {                   // otherwise, push the numerical value
+    |                                                          // of the token
+    |          evalStack.push(Double.valueOf(token));          // on the stack
+    |    
+    |        }//end if
+ 70 |  
+    |      }//end while
+    |  
+    |      // remove final result from stack and output it
+    |  
+ 75 |         output("Value of postfix expression = " + evalStack.pop() );
+    |
+    |    }//end interpretPostfix
+    |
+    |  /*----------------------------------------*/
+ 80 |
+    |    private void output(String s) {
+    |  
+    |      outputString = s;
+    |  
+ 85 |    }//end output
+    |
+    |  /*----------------------------------------*/
+    |
+    |    public void setInput(String input) {
+ 90 |  
+    |      postfixString = input;
+    |  
+    |    }//end setInput
+    |  
+ 95 |  /*----------------------------------------*/
+    |
+    |    public String getOutput() {
+    |
+    |      return outputString;
+100 |    
+    |    }//end getOutput
+    |
+    |  /*----------------------------------------*/
+    |
+105 | }//end class PostfixInterpreter
+    |
+    | /* insert here the Stack class given either in Program 6.11 or 6.12 */
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 6.11 Sequential Stack Implementation */
+
+   | class Stack {
+   |  
+   |    private int  count;                // the number of items in the stack
+   |    private int  capacity;      // the number of available array positions
+ 5 |    private int  capacityIncrement;          // the amount to increase the
+   |                                        // capacity during array expansion
+   |    private Object[] itemArray;        // the array that holds stack items
+   |
+   |  /*-----------------*/
+10 |
+   |    // the following defines a no-arg constructor for Stack objects
+   |
+   |    public Stack() {
+   |      count = 0;
+15 |      capacity = 10;
+   |      capacityIncrement = 5;
+   |      itemArray = new Object[capacity];
+   |    }
+   |
+20 |  /*-----------------*/
+   |
+   |    public boolean empty() {  // the stack is empty if and only if
+   |      return (count == 0);  // its item count is zero
+   |    }
+25 |
+   |  /*-----------------*/
+   |
+   |    public void push(Object X) {
+   |
+30 |      // if the itemArray does not have enough capacity,
+   |      // expand the itemArray by the capacity increment
+   |         if (count == capacity) {
+   |           capacity += capacityIncrement;
+   |           Object[] tempArray = new Object[capacity];
+35 |           for (int i = 0; i < count; i++) {
+   |             tempArray[i] = itemArray[i];
+   |           }
+   |           itemArray = tempArray;
+   |         }
+40 |    
+   |      // insert the new item X at the end of the current item sequence
+   |      // and increase the stack's count by one
+   |         itemArray[count++] = X;
+   |    
+45 |    }
+   |
+   |  /*-----------------*/
+   |
+   |    public Object pop() {
+50 |  
+   |      if (count == 0) {                          // if the stack is empty,
+   |        return null;                            // return the null object.
+   |      } else {                                    // otherwise, remove and
+   |        return itemArray[--count];                // return the top object
+55 |      }
+   |
+   |    } // end pop()
+   |
+   |  /*-----------------*/
+60 |
+   |    public Object peek() {
+   |    
+   |      if (count == 0) {                          // if the stack is empty,
+   |        return null;                            // return the null object.
+65 |      } else {                            // otherwise, return a reference
+   |        return itemArray[count-1];                    // to the top object
+   |      }                                             // without removing it
+   |    
+   |    } // end peek()
+70 |
+   |  /*-----------------*/
+   |
+   | } // end Stack class
+   |
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 6.12 The Linked Stack Class */
+
+   |  /*-----------------------------------------*/
+   |
+   |   class StackNode {
+   |     Object    item;
+ 5 |     StackNode  link;
+   |   }
+   |
+   |  /*-----------------------------------------*/
+   |
+10 |   class Stack {
+   |  
+   |      private StackNode topNode;
+   |
+   |    /*------*/
+15 |
+   |      // note: Java's default no-arg constructor, new Stack(),
+   |      // works fine for the linked stack representation
+   |      // so there is no need to define one here
+   |
+20 |    /*------*/
+   |
+   |      public boolean empty() {
+   |        return (topNode == null);
+   |      }
+25 |
+   |    /*------*/
+   |
+   |      public void push(Object X) {
+   |        StackNode newNode = new StackNode();
+30 |        newNode.item = X;
+   |        newNode.link = topNode;
+   |        topNode = newNode;
+   |      }
+   |
+35 |    /*------*/
+   |
+   |      public Object pop() {
+   |        if (topNode == null) {
+   |          return null;
+40 |        } else {
+   |          StackNode tempNode = topNode;
+   |          topNode = topNode.link;
+   |          return tempNode.item;
+   |        }
+45 |      }
+   |
+   |    /*------*/
+   |
+   |      public Object peek() {
+50 |        if (topNode == null) {
+   |          return null;
+   |        } else {
+   |          return topNode.item;
+   |        }
+55 |      }
+   |
+   |    /*------*/
+   |
+   |   } // end class Stack
+60 |
+   |
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 6.13 A Recursive Factorial Method */
+
+   |  double factorial( int n) {
+   |
+   |    if (n <= 1) {
+   |      return 1.0;
+ 5 |    } else {
+   |      return n * factorial( n - 1 );
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 6.22 Circular Queue Representation */
+
+   |  class Queue {
+   |
+   |    private int  front;  // the array index of the front item of the queue
+   |    private int  rear;      // the array index for the next item to insert
+ 5 |    private int  count;                // the number of items in the queue
+   |    private int  capacity;      // the number of available array positions
+   |    private int  capacityIncrement; // the amount to increase the capacity
+   |                                                 // during array expansion
+   |    private Object[] itemArray;        // the array that holds queue items
+10 |
+   |   /*-----------------*/
+   |
+   |   // here, we need the no-arg constructor
+   |
+15 |     public Queue() {
+   |       front = 0;
+   |       rear  = 0;
+   |       count = 0;
+   |       capacity = 10;
+20 |       capacityIncrement = 5;
+   |       itemArray = new Object[capacity];
+   |     }
+   |
+   |   /*-----------------*/
+25 |
+   |     public boolean empty() {
+   |       return (count == 0);
+   |     }
+   |
+30 |   /*-----------------*/
+   |
+   |     public void insert(Object newItem) {
+   |  
+   |     // if the itemArray does not have enough capacity,
+35 |     // expand the itemArray by the capacity increment
+   |        if (count == capacity) {
+   |          capacity += capacityIncrement;
+   |          Object[] tempArray = new Object[capacity];
+   |          if (front < rear) {  // if the items are in itemArray[front:rear-1]
+40 |            for (int i = front; i < rear; i++) {
+   |              tempArray[i] = itemArray[i];
+   |            }
+   |          } else {   // otherwise, move the items in two separate sections
+   |            for (int i = 0; i < rear; i++) {               // section one:
+45 |              tempArray[i] = itemArray[i];          // itemArray[0:rear-1]
+   |            }
+   |            for (int i = front; i < count; i++) {      // and section two:
+   |                                               // itemArray[front:count-1]
+   |              tempArray[i+capacityIncrement] = itemArray[i];
+50 |            }
+   |            front += capacityIncrement;   // then change front to point to
+   |                                                       // its new position
+   |          }
+   |          itemArray = tempArray;
+55 |        }
+   |  
+   |     // insert the newItem at the rear of the queue's current item sequence
+   |     // and increase the queue's count by one
+   |        itemArray[rear] = newItem;
+60 |        rear = (rear+1) % capacity;
+   |        count++;
+   |  
+   |      } // end insert
+   |
+65 |   /*-----------------*/
+   |
+   |      public Object remove() {
+   |  
+   |        if (count == 0) {            // if the queue is empty, return null
+70 |          return null;
+   |        } else {                       // otherwise, return the front item
+   |          Object tempItem = itemArray[front];
+   |          front = (front+1) % capacity;
+   |          count--;
+75 |          return tempItem;
+   |        }
+   |  
+   |      } // end remove
+   |
+80 |   /*-----------------*/
+   |
+   |  } //end Queue class
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 6.23 Linked Queue Representation */
+
+   | /*----------------------------------------------------------------*/
+   |
+   |   class QueueNode {
+   |     Object    item;
+ 5 |     QueueNode  link;
+   |   }
+   |
+   | /*----------------------------------------------------------------*/
+   |
+10 |   class Queue {
+   |
+   |      private QueueNode front;        // front contains a reference to the
+   |                                                // front item of the queue
+   |      private QueueNode rear;          // rear contains a reference to the
+15 |                                                 // rear item of the queue
+   |      private int count;               // the number of items in the queue
+   |   
+   |  /*-----------------*/
+   |
+20 |    // Java's automatically defined no-arg constructor suffices
+   |
+   |  /*-----------------*/
+   |
+   |    public boolean empty() {
+25 |      return (count == 0);
+   |    }
+   |
+   |  /*-----------------*/
+   |  
+30 |    public void insert(Object newItem) {
+   |    
+   |      QueueNode temp = new QueueNode();
+   |    
+   |      temp.item = newItem;
+35 |      temp.link = null;
+   |      if (rear == null) {
+   |        front = rear = temp;
+   |      } else {
+   |        rear.link = temp;
+40 |        rear = temp;
+   |      }
+   |      count++;
+   |    
+   |    } //end insert
+45 |
+   |  /*-----------------*/
+   |
+   |    
+   |    public Object remove() {
+50 |
+   |      if (count == 0) {              // if the queue is empty, return null
+   |        return null;
+   |      } else {                         // otherwise, return the front item
+   |        Object tempItem = front.item;
+55 |        front = front.link;
+   |        if (front == null) {
+   |          rear = null;
+   |        }
+   |        count--;
+60 |        return tempItem;
+   |      }
+   |
+   |    } //end remove
+   |
+65 |  /*-----------------*/
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 6.26 Reading and Writing Print Buffer Lines */
+
+   |
+   |  void writeLineToBePrinted() {                          // the CPU's task
+   |
+   |    if ( (there is a line L to print) &&
+ 5 |      (the print buffer is neither full nor busy) )  {
+   |        printBufferQueue.insert(L);
+   |    }
+   |  }
+   |
+10 |  void readLineToBePrinted() {                       // the Printer's task
+   |
+   |    if (the print buffer is neither empty nor busy) {
+   |      L = printBufferQueue.remove();
+   |      (print line L on the Printer);
+15 |    }
+   |  }
+   |
+
+
+/*--------------------------------------------------------------------------*/
+

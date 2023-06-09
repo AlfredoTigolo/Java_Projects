@@ -1,0 +1,63 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 9.16 Inserting a New Table Entry into a Hash Table */
+
+   |  void hashInsert(KeyType K, InfoType I) {
+   |   
+   |    int   i; 
+   |    int   probeDecrement;
+ 5 |
+   |    i = h(K);                          // let i be the first hash location
+   |    probeDecrement = p(K);                  // compute the probe decrement
+   | 
+   |    while (T[i].key != emptyKey) {
+10 |      i -= probeDecrement;                  // compute next probe location
+   |      if (i < 0) { 
+   |        i += M;                                   // wrap around if needed
+   |      }
+   |    }
+15 |
+   |    T[i].key = K;                 // insert new key K in table T, and then
+   |    T[i].info = I;                         // insert new info I in table T
+   |    count++;                              // increment current entry count
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 9.17 Searching for a Table Entry with Search Key K */
+
+   |  int hashSearch(KeyType K) {
+   |  
+   |      int      i;
+   |      int      probeDecrement;
+ 5 |      KeyType  probeKey;
+   |
+   | 
+   |   // initializations
+   |      i = h(K);                        // let i be the first hash location
+10 |      probeDecrement = p(K);                    // compute probe decrement
+   |      probeKey = T[i].key;           // extract first probe key from table
+   |    
+   |
+   |   // search loop
+15 |      while ( (K != probeKey) && (probeKey != emptyKey) ) {
+   |        i -= probeDecrement;                // compute next probe location
+   |        if (i < 0) {
+   |          i += M;                                 // wrap around if needed
+   |        }
+20 |        probeKey = T[i].key;                     // extract next probe key
+   |      }
+   |
+   |   // determine success or failure
+   |      if (probeKey == emptyKey) {
+25 |        return -1;            // return -1 to signify that K was not found
+   |      } else {  
+   |        return  i;              // return location, i, of key K in table T
+   |      }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+

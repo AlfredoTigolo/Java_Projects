@@ -1,0 +1,30 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program B.1 Selection Sorting Algorithm for Sorting an Integer Array A */
+
+   |  void SelectionSort(int[] A)  {         // sorts an array of integers, A,
+   |                                                  // into increasing order
+   |    int  maxPosition, temp, i, j;
+   |
+ 5 |    for (i = A.length - 1; i > 0; i--) {   // for each i in 1:A.length - 1
+   |                                               // in decreasing order of i
+   |      maxPosition = i;
+   |                
+   |      for( j = 0;  j < i;  j++) {
+10 |    
+   |        if (A[j] > A[maxPosition]) { // find the position, maxPosition, of
+   |          maxPosition = j;                // the largest integer in A[0:i]
+   |        }                                                 // then exchange
+   |                                                // A[i] and A[maxPosition]
+15 |      }
+   |  
+   |      // exchange A[i] and A[maxPosition]
+   |         temp = A[i]; A[i] = A[maxPosition]; A[maxPosition] = temp;
+   |  
+20 |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+

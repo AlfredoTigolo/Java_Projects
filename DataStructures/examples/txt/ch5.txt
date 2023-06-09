@@ -1,0 +1,419 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 5.1 Informal Interface for a PriorityQueue Class */
+
+   |  /*
+   |   *   The public interface for the PriorityQueue class contains
+   |   *  the following method calls. Here, let PQ be a variable having
+   |   *  a PriorityQueue object as its value, let X be a variable that
+ 5 |   *  contains a priority queue item, and let n be an integer variable.
+   |   */
+   |
+   |  PQ = new PriorityQueue();  // creates an initially empty priority queue PQ
+   |
+10 |  n = PQ.size();                  // returns the number of items in PQ and
+   |                                    // stores it in the integer variable n
+   |  
+   |  PQ.insert(X);                                          // puts X into PQ
+   |
+15 |  X = PQ.remove();        // removes the highest priority item from PQ and
+   |                           // assigns it to be the value of the variable X
+   |  
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 5.2 A Priority Queue Sorting Method */
+
+   |  void priorityQueueSort(ComparisonKey[] A) {
+   |  
+   |    int i;                     // let i be an integer array index variable
+   |
+ 5 |    int n = A.length;   // let n be the length of the array A to be sorted
+   |
+   |    PriorityQueue PQ = new PriorityQueue();   // let PQ be initially empty
+   |
+   |    for (i = 0; i < n; i++) PQ.insert(A[i]);      // put A's items into PQ
+10 |
+   |    for (i = n-1; i >=0; i--) A[i] = PQ.remove();     // remove PQ's items
+   |                                                      // and put them in A
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 5.3 Sorting using a Priority Queue */
+
+   |   import java.io.*;
+   |   import java.lang.*;
+   |   import java.applet.Applet;
+   |  
+ 5 |  
+   | public class PriorityQueueApplet extends Applet {
+   |  
+   |  public void init() {
+   |  
+10 |    int n = 10;   // for this simple example, we sort only n = 10 integers
+   |    
+   |    ComparisonKey[] A = new ComparisonKey[n];      // let A be an array of
+   |                                                       // 10 items to sort
+   |  
+15 |    // initialize the array A to ten integers to sort and print them
+   |       for (int i = 0; i < n; i++) {
+   |         A[i] = new PQItem( squareOf(3*i - 13) );
+   |         System.out.print(A[i]+", ");
+   |       }                             // the unsorted integers printed are:
+20 |       System.out.println();            // 169,100,49,16,1,4,25,64,121,196
+   |  
+   |    // sort the array A using priorityQueueSorting
+   |       priorityQueueSort(A);
+   |    
+25 |    // print the values in the array A after sorting
+   |       for (int i = 0; i < n; i++) {
+   |         System.out.print(A[i]+", ");
+   |       }                               // the sorted integers printed are:
+   |       System.out.println();            // 1,4,16,25,49,64,100,121,169,196
+30 |
+   |  } // end init()
+   |
+   |  /*---------------*/
+   |
+35 |  int squareOf(int x) { return x*x; }           // compute the square of x
+   |
+   |  /*---------------*/
+   |
+   |  void priorityQueueSort(ComparisonKey[] A) {
+40 |    
+   |    int i;                             // let i be an array index variable
+   |    int n = A.length;         // n is the length of the array to be sorted
+   |    
+   |    PriorityQueue PQ = new PriorityQueue();          // let PQ be an empty
+45 |                                                         // priority queue
+   |    for (i = 0; i < n; i++) PQ.insert(A[i]);   // insert A's items into PQ
+   |    
+   |    for (i = n -1; i >= 0; i--) A[i] = PQ.remove();  // put PQ's items into A
+   |                                                 // in reverse index order
+50 |  }
+   |  
+   | } // end class PriorityQueueApplet
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 5.4 The ListNode Class Definition */
+
+   |  class ListNode {
+   |    ComparisonKey  item;
+   |    ListNode       link;
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 5.5 The Sorted Linked-List Representation of the PriorityQueue Class */
+
+   | class PriorityQueue {
+   |    
+   |   private int       count;   // the number of items in the priority queue
+   |  
+ 5 |   private ListNode  itemList;                 // the linked list of items
+   |  
+   |  /*---------------------------------------------*/
+   |  
+   |    // Note that Java automatically defines the no-arg constructor
+10 |    // PriorityQueue() that creates an initially empty PriorityQueue
+   |    // object having a count of zero and an empty itemList
+   |  
+   |   /*-----------------*/
+   |
+15 |   /** the size() method returns the count of the number of items */
+   |  
+   |   public int size() {
+   |     return count;
+   |   }
+20 |  
+   |   /*-----------------*/
+   |  
+   |   /** the private sortedInsert() method is used by the Insert() method */
+   |  
+25 |   private ListNode sortedInsert(ComparisonKey newItem, ListNode P) {
+   |     if ( (P == null) || ( newItem.compareTo(P.item) >= 0 ) ) {
+   |       ListNode N = new ListNode();     // if P points to an empty list or
+   |       N.item = newItem;    // the newItem to insert is of higher priority
+   |       N.link = P;          // than P's item, insert a new ListNode N with
+30 |       return(N);     // newItem as its item that links to P, and return N
+   |     } else {
+   |       P.link = sortedInsert(newItem, P.link);    // otherwise, insert the
+   |       return(P);              // newItem on the list referenced by P.link
+   |     }  
+35 |   }
+   |  
+   |   /*-----------------*/
+   |  
+   |   /** the method insert(newItem) inserts newItem on the itemList */
+40 |  
+   |   public void insert(ComparisonKey newItem) {
+   |    itemList = sortedInsert(newItem, itemList);   // insert the newItem on
+   |    count++;                    // the itemList of the priority queue, and
+   |                         // increase the size of the priority queue by one
+45 |   }
+   |  
+   |   /*-----------------*/
+   |  
+   |   /** the remove() method removes and returns the highest priority item */
+50 |  
+   |   public ComparisonKey remove() {
+   |    if (count == 0) {                    // if the priority queue is empty,
+   |      return null;                                // return the null Object
+   |    } else {                                                  // otherwise,
+55 |      ComparisonKey K = itemList.item;              // save item to return,
+   |      itemList = itemList.link;                // link to second list node,
+   |      count--;                                  // reduce the count by one,
+   |      return(K);                    // and return the first ListNode's item
+   |    }
+60 |   }
+   |  
+   |  /*---------------------------------------------*/
+   |  
+   | } // end PriorityQueue class
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 5.6 The Unordered Array Representation of the PriorityQueue Class */
+
+   | class PriorityQueue {
+   |    
+   |    private int  count;       // the number of items in the priority queue
+   |    private int  capacity;      // the number of available array positions
+ 5 |    private int  capacityIncrement; // the amount to increase the capacity
+   |                                                 // during array expansion
+   |    private ComparisonKey[] itemArray;    // the array that holds PQ items
+   |    
+   |  /*-----------------*/
+10 |    
+   |    /** construct an initially empty PriorityQueue */
+   |    
+   |    public PriorityQueue() {    // we need to define a no-arg constructor.
+   |      count = 0;                  // the empty priority queue has no items
+15 |      capacity = 10;                // but there is capacity for ten items
+   |      capacityIncrement = 5;               // and the capacity will expand
+   |      itemArray = new ComparisonKey[capacity];    // in increments of five
+   |    }                                                    // when necessary
+   |    
+20 |  /*-----------------*/
+   |    
+   |    /** the size() method returns the count of the number of items */
+   |    
+   |    public int size() {
+25 |      return count;
+   |    }
+   |    
+   |  /*-----------------*/
+   |  
+30 |    /** the insert() method inserts a new item into a priority queue */
+   |    
+   |    public void insert(ComparisonKey newItem) {
+   |      
+   |      // if the itemArray does not have enough capacity,
+35 |      // expand the itemArray by the capacity increment
+   |         if (count == capacity) {
+   |           capacity += capacityIncrement;
+   |           ComparisonKey[] tempArray = new ComparisonKey[capacity];
+   |           for (int i = 0; i < count; i++) {
+40 |             tempArray[i] = itemArray[i];
+   |           }
+   |           itemArray = tempArray;
+   |         }
+   |      
+45 |      // insert the newItem at the end of the current sequence of items
+   |      // and increase the priority queue's count by one
+   |           itemArray[count++] = newItem;
+   |    }
+   |  
+50 |  /*-----------------*/
+   |  
+   |    /** the remove() method removes the highest priority item */
+   |    
+   |    public ComparisonKey remove() {
+55 |      if (count == 0) {                     // return null if the priority
+   |        return null;                                    // queue is empty.
+   |      } else {                     // otherwise, find the highest priority
+   |        int maxPosition = 0;                            // item's position
+   |        ComparisonKey maxItem = itemArray[0];
+60 |        for (int i = 1; i < count; i++) {
+   |          if ( itemArray[i].compareTo(maxItem) > 0 ) {
+   |            maxPosition = i;
+   |            maxItem = itemArray[i];
+   |          }                                // then move the last item into
+65 |        }                                           // the hole created by
+   |        itemArray[maxPosition] = itemArray[--count];       // removing the
+   |        return maxItem;                           // highest priority item
+   |      }                           // and, return the highest priority item
+   |    }
+70 |  
+   |  /*-----------------*/
+   |  
+   | } // end PriorityQueue class
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 5.7 The ComparisonKey Interface */
+
+   |  interface ComparisonKey {
+   |    
+   |    // if k1 and k2 are ComparisonKeys, k1.compareTo(k2) has the
+   |    // value 0, +1, or -1 according as k1 == k2, k1 > k2, or k1 < k2 in
+ 5 |    // the order of priority defined by the compareTo method
+   |    
+   |       int compareTo(ComparisonKey value);
+   |    
+   |    
+10 |    // converts a ComparisonKey object to a printable string
+   |    
+   |       String toString();
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 5.8 An Integer PQItem Class Implementing the ComparisonKey Interface */
+
+   | class PQItem implements ComparisonKey {
+   |  
+   |    private  int  key;      // the key data field contains an integer key
+   |                                       // giving the priority of the item
+ 5 |  
+   |  /*-----------------*/
+   |  
+   |    /** the single int argument constructor sets the key to its argument */
+   |    
+10 |    PQItem(int value) {
+   |      key = value;
+   |    }
+   |  
+   |  /*-----------------*/
+15 |  
+   |    /** the toString() method converts an integer key into a String */
+   |  
+   |    public String toString() {
+   |      return Integer.toString(key);     // convert the int key to a String
+20 |    }          
+   |                
+   |  /*-----------------*/
+   |  
+   |    /** the k1.compareTo(k2) method is a three-way comparison of two */
+25 |    /** keys, k1 and k2, that returns 0, 1, and -1 when k1 == k2, k1 > k2, */
+   |    /** and k1 < k2, respectively */
+   |  
+   |    public int compareTo(ComparisonKey value) {
+   |      int a = this.key;
+30 |      int b = ((PQItem)value).key;
+   |      return ( (a == b) ? 0 : ( (a > b) ? 1 : -1) );
+   |    }
+   |  
+   |  /*-----------------*/
+35 |  
+   | }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 5.9 A String PQItem Class Implementing the ComparisonKey Interface */
+
+   | class PQItem implements ComparisonKey {
+   |  
+   |    private  String  key;      // the key data field contains a String key
+   |                                        // giving the priority of the item
+ 5 |  /*-----------------*/
+   |  
+   |    /** the single String argument constructor sets the key to its argument */
+   |  
+   |    PQItem(String value) {
+10 |      key = value;
+   |    }
+   |  
+   |  /*-----------------*/
+   |  
+15 |    /** the toString() method simply returns the String-valued key */
+   |    
+   |    public String toString() {
+   |      return key;  
+   |    }
+20 |    
+   |  /*-----------------*/
+   |    
+   |    /** the k1.compareTo(k2) method is a three-way comparison of two */
+   |    /** keys, k1 and k2, that returns 0, 1, and -1 when k1 == k2, */
+25 |    /** k1 > k2, and k1 < k2, respectively */
+   |    
+   |    public int compareTo(ComparisonKey value) {
+   |      String a = this.key;
+   |      String b = ((PQItem)value).key;
+30 |      return a.compareTo(b);          // here, use the inherited compareTo
+   |    }                                // method already defined for Strings
+   |    
+   |  /*-----------------*/
+   |    
+   | }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 5.10 Sorting Some Strings using a Priority Queue */
+
+   |  import java.io.*;
+   |  import java.lang.*;
+   |  import java.applet.Applet;
+   |  
+ 5 |  
+   | public class PriorityQueueApplet extends Applet {
+   |  
+   |  public void init() {
+   |  
+10 |   // create an array of Strings to sort
+   |      String[] someNames = {"Ken", "Pam", "Meg", "Jan",  "Ned",
+   |                            "Peg", "Deb", "Jim",  "Amy", "Tom"};
+   |  
+   |   // store the names as PQItems in an array A of ComparisonKeys
+15 |   // and print them
+   |      int n = someNames.length;
+   |      ComparisonKey[] A = new ComparisonKey[n];
+   |      for (int i = 0;  i < n;  i++) {
+   |        A[i] = new PQItem(someNames[i]);
+20 |        System.out.print(A[i] + ", ");
+   |      }                            // the unsorted names printed are those
+   |      System.out.println();                        // shown on lines 11:12
+   |  
+   |   // sort the array A using priorityQueueSorting
+25 |      priorityQueueSort(A);
+   |    
+   |   // print the values in the array A after sorting
+   |      for (int i = 0; i < n; i++) {
+   |        System.out.print(A[i] + ", ");
+30 |      }                                   // the sorted names printed are:
+   |      System.out.println();                    // Amy, Deb, Jan, Jim, Ken,
+   |                                               // Meg, Ned, Pam, Peg, Tom.
+   |  } // end init()
+   |
+35 |  /*---------------*/
+   |
+   |  void priorityQueueSort(ComparisonKey[] A) {
+   |    
+   |    int i;                             // let i be an array index variable
+40 |    int n = A.length;         // n is the length of the array to be sorted
+   |    
+   |    PriorityQueue PQ = new PriorityQueue();          // let PQ be an empty
+   |                                                         // priority queue
+   |    for (i = 0; i < n; i++) PQ.insert(A[i]);   // insert A's items into PQ
+45 |    
+   |    for (i = n-1; i >= 0; i--) A[i] = PQ.remove();  // put PQ's items into
+   |                                               // A in reverse index order
+   |  }
+   |  
+   | } // end class PriorityQueueApplet
+
+
+/*--------------------------------------------------------------------------*/
+

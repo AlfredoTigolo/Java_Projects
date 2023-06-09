@@ -1,0 +1,363 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 7.4 Printing the ith Item of a Linked List */
+
+   |  void printItem(int i) {
+   |  
+   |    ListNode N = firstNode;               // let N point to L's first node
+   |    int j = i;                        // save i's value in j for later use
+ 5 |  
+   |    while ( ( i > 1 ) && ( N != null) ) {      // advance the pointer N to
+   |      N = N.link;                     // point to the ith item of the list
+   |      i--;
+   |    }
+10 |
+   |    if ( ( i == 1) && (N != null ) ) {
+   |      System.out.println(N.item); // print the ith item provided it exists
+   |    } else {
+   |      System.out.println("list has no item at index = " + j);
+15 |    }
+   |  }
+
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 7.9 The ListNode Class and the Generalized List Class, GenList */
+
+   |  /* ------------------------- */
+   |
+   |   class ListNode { 
+   |     Object    item;                  // any Java Object can be an item in
+ 5 |     ListNode    link;                               // a generalized list
+   |   }
+   |
+   |  /* ------------------------- */
+   |
+10 |   class GenList {
+   |
+   |      private ListNode  firstNode;  // the firstNode data field contains a
+   |                          // reference to the linked list's first ListNode
+   |    /* ------------- */
+15 |
+   |      void insertItem(Object newItem) {       // this method inserts a new
+   |        ListNode N = new ListNode();       // ListNode on the front of the
+   |        N.item = newItem;            // generalized list and sets its item
+   |        N.link = firstNode;                // field to contain the newItem
+20 |        firstNode = N;
+   |      } 
+   |
+   |    /* ------------- */
+   |
+25 |      void print() {           // to print a generalized list, first print
+   |        System.out.print('(');              // an opening left parenthesis
+   |        ListNode N = firstNode;               // let N point to successive
+   |        while (N != null) {                           // nodes on the list
+   |          if (N.item instanceof GenList) {
+30 |            ( (GenList)N.item).print();      // print sublists recursively
+   |          } else {
+   |            System.out.print(N.item);
+   |          }
+   |          if ( (N = N.link) != null ) { // advance N to point to next node
+35 |            System.out.print(",   ");         // print comma between items
+   |          }
+   |        }
+   |        System.out.print(')');        // print a closing right parenthesis
+   |      }
+40 |
+   |    }// end class GenList
+   |
+   |  /* ------------------------- */
+
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 7.11 Constructing and Printing a Generalized List */
+
+   | import java.io.*;
+   | import java.applet.Applet;
+   |  
+   | public class GenListApplet extends Applet {
+ 5 |    
+   |   public void init() {
+   |    
+   |     /*-----
+   |       When executed, this init() method prints:
+10 |        (students, (Amy Jones, (gpa, 3.6), (classOf, 1998) ),
+   |                   (Sam Smith, (gpa, 2.7), (classOf, 1998) )  )
+   |     -----*/
+   |        
+   |    // Create a generalized list S of the form (gpa, 3.6)
+15 |       GenList S = new GenList();
+   |       S.insertItem(new Double(3.6));
+   |       S.insertItem( "gpa" );
+   |    
+   |    // Create a generalized list G of the form (classOf, 1998)
+20 |       GenList G = new GenList(); 
+   |       G.insertItem(new Integer(1998));
+   |       G.insertItem("classOf");
+   |    
+   |    // Create a list H of the form (Amy Jones,(gpa,3.6),(classOf,1998))
+25 |       GenList H = new GenList();
+   |       H.insertItem(G);  
+   |       H.insertItem(S);
+   |       H.insertItem( "Amy Jones" );
+   |
+30 |    // Create a list K of the form (gpa, 2.7)
+   |       GenList K = new GenList(); 
+   |       K.insertItem(new Double(2.7));
+   |       K.insertItem( "gpa" );
+   |    
+35 |    // Create a list M of the form (Sam Smith,(gpa,2.7),(classOf,1998))
+   |       GenList M = new GenList(); 
+   |       M.insertItem(G);          // G is a sublist shared by lists H and M
+   |       M.insertItem(K);             // K and S are separate "gpa" sublists
+   |       M.insertItem( "Sam Smith" );
+40 |
+   |    // Create the master student list L   
+   |       GenList L = new GenList(); 
+   |       L.insertItem(M);  
+   |       L.insertItem(H);
+45 |       L.insertItem( "students" );
+   |  
+   |    // Print the GenList L
+   |       L.print();
+   |       System.out.println();
+50 |
+   |   }//end init()
+   |
+   | }//end class GenListApplet
+   |
+   | /* -- < To complete the applet, insert the text of Program 7.9 here > -- */
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 7.13 Using StringBuffers in String Operations */
+
+   | import java.io.*;
+   | import java.applet.Applet;
+   |  
+   | public class StringBufferApplet extends Applet {
+ 5 |
+   |   public void init() {
+   |
+   |    // create new StrngBuffer with capacity = 20
+   |       StrngBuffer buf = new StrngBuffer(20);
+10 |    
+   |    // append two strings to the end of the StrngBuffer, buf
+   |       buf.append("\"Say the secret word").append(", and win $100.\"");
+   |    
+   |    // print a few intermediate results    
+15 |       System.out.println("buffer length = " + buf.length());
+   |       System.out.println("buffer capacity = " + buf.capacity());
+   |       System.out.println("the buffer's 8th character = " + buf.charAt(7));
+   |       System.out.println("the string in the buffer = " + buf.toString());
+   |     
+20 |    // create another StrngBuffer with an initial contents
+   |       StrngBuffer newBuf = new StrngBuffer("Groucho Marx said, ");
+   |    
+   |    // append the old buffer's contents to the end of the new buffer
+   |       newBuf.append(buf.toString());
+25 |       System.out.println("string in new buffer = " + newBuf.toString());
+   |    
+   |    // try out the string buffer copy method
+   |       StrngBuffer anotherBuf = copyStrngBuffer(newBuf);
+   |       System.out.println("another buffer holds = " + anotherBuf.toString());  
+30 |       System.out.println("buffer length = " + anotherBuf.length());
+   |
+   |  }// end init()
+   |  
+   |   /* A method that creates a new StrngBuffer as a copy of another */
+35 |   public StrngBuffer copyStrngBuffer(StrngBuffer oldBuf) {
+   |     char[] charArray = new char[oldBuf.length()];
+   |     oldBuf.getChars(0, oldBuf.length(), charArray, 0);
+   |     StrngBuffer result = new StrngBuffer(oldBuf.length());
+   |     result.append(String.valueOf(charArray));
+40 |     return result;
+   |   }
+   |  
+   | }//end applet
+   |
+   |/* --< insert here the text of the StrngBuffer class from Program 7.14 >-- */
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 7.14  A StrngBuffer Class Implementation */
+
+   | class StrngBuffer {
+   |  
+   |   private int count;
+   |   private int capacity;
+ 5 |   private int capacityIncrement;
+   |   private char[] charArray;
+   |    
+   | /* --------------------- */
+   |  
+10 |   // three StrngBuffer constructors are given
+   |  
+   |   StrngBuffer() {                      // creates a new empty StrngBuffer
+   |     count = 0;                           // with a default capacity of 16
+   |     capacity = 16;
+15 |     capacityIncrement = 8;
+   |     charArray = new char[capacity];
+   |   }
+   |  
+   |   StrngBuffer(int capacity) {          // creates a new empty StrngBuffer
+20 |     count = 0;                                // whose capacity is set by
+   |     this.capacity = capacity;                      // the input parameter
+   |     capacityIncrement = 8;
+   |     charArray = new char[capacity];
+   |   }
+25 |  
+   |   StrngBuffer(String str) {                  // creates a new StrngBuffer
+   |     count = str.length();                   // initialized to contain the
+   |     capacity = count;                     // characters in the String str
+   |     capacityIncrement = 8;
+30 |     charArray = str.toCharArray();
+   |   }
+   |  
+   | /* --------------------- */
+   |  
+35 |  // this section gives definitions of some StrngBuffer methods
+   |  
+   |    int capacity () {
+   |      return this.capacity;
+   |    }
+40 |  
+   |  /* ------- */
+   |  
+   |    void ensureCapacity(int minimumCapacity) {
+   |      if (capacity < minimumCapacity) {
+45 |        char [] tempCharArray = new char[minimumCapacity];
+   |        for (int i = 0; i < count; i++) {
+   |          tempCharArray[i] = charArray[i];
+   |        }
+   |        charArray = tempCharArray;
+50 |        capacity = minimumCapacity;
+   |      }
+   |    }
+   |  /* ------- */
+   |  
+55 |    int length () {      // returns the length of the string in the string
+   |      return count;   // buffer where the length of a string is the number
+   |    }                                 // of characters the string contains
+   |  
+   |  /* ------- */
+60 |  
+   |    int charAt(int index) {  // returns the character in the string buffer
+   |      return charArray[index];       // at the position given by the index
+   |    }
+   |  
+65 |  /* ------- */
+   |  
+   |    StrngBuffer append(String str) {  // appends the String str to the end
+   |      int len = str.length();          // of the characters in the buffer,
+   |      ensureCapacity(count+len);     // expanding the buffer as necessary,
+70 |      int j = 0;                                // and returns a reference
+   |      for (int i = count; i < count + len; i++) {         // to the buffer
+   |        charArray[i] = str.charAt(j++);  
+   |      }
+   |      count += len;
+75 |      return this;
+   |    }
+   |  
+   |  /* ------- */
+   |  
+80 |    void getChars(int srcOffset, int srcEnd, char[] dst, int dstOffset) {
+   |      for (int i = srcOffset; i < srcEnd; i++) { // copies characters from
+   |        dst[dstOffset++] = charArray[i];    // srcOffset:srcEnd-1 into the
+   |      }                                 // character array dst starting at
+   |    }                                                   // index dstOffset
+85 |  
+   |  /* ------- */
+   |  
+   |    public String toString() {           // generates the string contained
+   |      char [] data = new char[length()];             // in the StrngBuffer
+90 |      getChars(0,length(), data, 0);
+   |      return String.valueOf(data);
+   |    }
+   |  
+   |  /* ------- */
+95 |  
+   | }//end class StrngBuffer
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 7.19 Garbage Collection by Marking and Gathering */
+
+   |  static final byte FREE = 0;
+   |  static final byte RESERVED = 1;
+   |  
+   |  /* each ListNode has a markBit which is either FREE or RESERVED */
+ 5 |    
+   |    class ListNode {
+   |      byte     markBit;                                // FREE or RESERVED
+   |      Object      item;
+   |      ListNode   link;
+10 |    }
+   |
+   |  /* assume further that all ListNodes are allocated inside a region of */
+   |  /* memory as an array of nodes called the listNodeArray, as follows: */
+   |
+15 |    ListNode   listNodeArray[listNodeArraySize];
+   |    ListNode   avail;      // avail will point to the available space list
+   |
+   |  void garbageCollection() {
+   |  
+20 |    int i;         // i is a local variable that indexes the listNodeArray
+   |
+   |    /* phase 1-Initialization Phase-mark all ListNodes FREE */
+   |
+   |       for ( i = 0; i < listNodeArraySize; i++ ) {
+25 |         listNodeArray[i].markBit = FREE;
+   |       }
+   |
+   |
+   |    /* phase 2-Marking Phase-mark all ListNodes in use RESERVED */
+30 |
+   |       // use the method markListNodesInUse of Program Strategy 7.20
+   |       // to mark all list nodes in use
+   |
+   |    /* phase 3-Gathering Phase-link all FREE ListNodes together */
+35 |
+   |       avail = null;
+   |       for ( i = 0; i < listNodeArraySize; i++ ) {
+   |         if ( listNodeArray[i].markBit == FREE ) {
+   |           listNodeArray[i].link = avail;
+40 |           avail = listNodeArray[i];
+   |         }
+   |       }       // at the conclusion, avail is the new available space list
+   |  
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 7.20 Marking List Nodes in Use */
+
+   |  void markListNodesInUse(ListNode L) {
+   |  
+   |
+   |    if ( (L != null) && (L.markBit != RESERVED) )  {
+ 5 |    
+   |      L.markBit = RESERVED;
+   |      
+   |    
+   |      if (L.item instanceof ListNode) {
+10 |        markListNodesInUse(L.item);
+   |      }
+   |    
+   |      
+   |      markListNodesInUse(L.link);
+15 |    }
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+

@@ -1,0 +1,637 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 8.14 Removing an Item from a Heap */
+
+   |  ItemType remove(Heap H) {
+   |  
+   |    NodeType   L;            // let L be the last node of H in level order
+   |    NodeType   R;              // R is used to refer to the root node of H
+ 5 |    ItemType   itemToRemove;          // temporarily stores item to remove
+   |
+   |    if (H is not empty) {
+   |  
+   |      // remove the highest priority item which is stored in 
+10 |      // H's root node, R 
+   |         itemToRemove = (the value stored in the root node, R, of H);
+   |  
+   |      // move L's value into the root of H, and delete L 
+   |         (R's value) = (the value in leaf L);
+15 |         (delete node L);
+   |  
+   |      // reheapify the values in the remaining nodes of H starting at 
+   |      // the root, R, by applying the algorithm in Program Strategy 8.15 
+   |      // to the root node, R, in heap H 
+20 |         if  (H is not empty)  {
+   |           (reheapify the heap H starting at node R);
+   |         }
+   |
+   |         return (itemToRemove);
+25 |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 8.15 Reheapifying a Heap Starting at Node N */
+
+   |  void (reheapify the heap H starting at node N)  {
+   |  
+   |    NodeType    N,  M;
+   |    ItemType   V1, V2;
+ 5 |
+   |
+   |    (let V1 refer to N's value)
+   |    
+   |    while (node N still has children)  {
+10 |
+   |      (let M be the child of node N having the larger value, V2)
+   |
+   |      if ( V1 „ V2 ) {
+   |        return;
+15 |      } else {
+   |        (exchange the values in nodes N and M);
+   |        (let N refer to node M and let V1 refer to N's value);
+   |      }
+   |
+20 |    }
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 8.16 Heapifying a Complete Binary Tree */
+
+   |  void heapify(Heap H) {
+   |  
+   |    NodeType  N;
+   |
+ 5 |    for (N = the internal nodes of H in reverse level-order) {
+   |
+   |      (reheapify the heap H starting at node N);
+   |      
+   |    }
+10 |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+    /** Program 8.20 The Heap Implementation of the Priority Queue Class */
+
+    | class PriorityQueue {
+    |  
+    |  private int  count;        // the number of items in the priority queue
+    |  private int  capacity;       // the number of available array positions
+  5 |  private int  capacityIncrement;  // the amount to increase the capacity
+    |                                                // during array expansion
+    |  private ComparisonKey[] itemArray;     // the array that holds PQ items
+    |  
+    |    // here, we need to define our own no-arg constructor
+ 10 |  
+    |    public PriorityQueue() {            // holds capacity-1 items because
+    |      count = 0;               // itemArray[0] is always empty and unused
+    |      capacity = 16;
+    |      capacityIncrement = 8;
+ 15 |      itemArray = new ComparisonKey[capacity];
+    |    }
+    |    
+    |  
+    |  /* the methods implementing the Priority Queue ADT are now defined */
+ 20 |  
+    |   /*-----------------*/
+    |  
+    |    public int size() {           // the size() method returns the number
+    |      return count;                     // of items in the priority queue
+ 25 |    }
+    |  
+    |   /*-----------------*/
+    |  
+    |    public void insert(ComparisonKey newItem) {
+ 30 |    
+    |     // if the itemArray does not have enough capacity,
+    |     // expand the itemArray by the capacityIncrement
+    |    
+    |        if (count == capacity - 1) {
+ 40 |          capacity += capacityIncrement;
+    |          ComparisonKey[] tempArray = new ComparisonKey[capacity];
+    |          for (int i = 1; i <= count; i++) {
+    |            tempArray[i] = itemArray[i];
+    |          }
+ 45 |          itemArray = tempArray;
+    |        }
+    |      
+    |    
+    |     // increase the priority queue's count by one and insert the newItem
+ 50 |     // at the end of the current priority queue item sequence
+    |    
+    |        count++;
+    |        int childLoc = count;
+    |        int parentLoc = childLoc/2;
+ 55 |  
+    |        while (parentLoc != 0) {  // while a parent still exists
+    |      
+    |          if (newItem.compareTo(itemArray[parentLoc]) <= 0 ) {
+    |            itemArray[childLoc] = newItem;           // store the newItem
+ 60 |            return;                                         // and return
+    |          } else {
+    |            itemArray[childLoc] = itemArray[parentLoc]; 
+    |            childLoc = parentLoc;
+    |            parentLoc = childLoc/2;
+ 65 |          }
+    |        
+    |        }
+    |    
+    |        itemArray[childLoc] = newItem;  // put newItem in final resting place
+ 70 |      
+    |    }//end insert()
+    |  
+    |   /*-----------------*/
+    |  
+ 75 |    public ComparisonKey remove() {
+    |    
+    |      if (count == 0) {    // if the priority queue is empty, return null
+    |        return null;
+    |      } else {         // otherwise, return the root's item and reheapify
+ 80 |      
+    |        // declarations
+    |           int currentLoc;           // location currently being examined
+    |           int childLoc;                         // a child of currentLoc
+    |           ComparisonKey itemToPlace;        // an item value to relocate
+ 85 |           ComparisonKey itemToReturn;    // removed item value to return
+    |        // initializations
+    |           itemToReturn = itemArray[1]; // save root item to return later
+    |           itemToPlace = itemArray[count--];          // last leaf's item
+    |           currentLoc = 1;                   // currentLoc starts at root
+ 90 |           childLoc = 2*currentLoc;          // childLoc starts at root's
+    |                                                            // left child
+    |        while (childLoc <= count) {         // while a child still exists
+    |      
+    |         // set childLoc to larger child of currentLoc
+ 95 |            if (childLoc < count) {              // if right child exists
+    |              if (itemArray[childLoc+1].compareTo(itemArray[childLoc])>0)
+    |                childLoc++;
+    |              }
+    |      
+100 |         // if the item at childLoc is larger than itemToPlace
+    |         // move this larger item into currentLoc, and move
+    |         // currentLoc down
+    |            if (itemArray[childLoc].compareTo(itemToPlace) > 0) {
+    |              itemArray[currentLoc] = itemArray[childLoc];
+105 |              currentLoc = childLoc;
+    |              childLoc = 2*currentLoc;
+    |            } else {
+    |              itemArray[currentLoc] = itemToPlace;
+    |              return itemToReturn;
+110 |            }
+    |        }//end while
+    |      
+    |        // final placement of itemToPlace
+    |           itemArray[currentLoc] = itemToPlace;
+115 |      
+    |        // return the item originally at the root
+    |           return itemToReturn;
+    |      
+    |      }//end if
+120 |        
+    |    }//end remove()
+    |  
+    |   /*-----------------*/
+    |
+    | }// end PriorityQueue class
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 8.26 Generalized Recursive Traversal Method */
+
+   |  void traverse(TreeNode T, int traversalOrder) {
+   |  
+   |    /* to visit T's nodes in the order specified by the */
+   |    /* traversalOrder parameter */
+ 5 |
+   |    if (T != null) {                           // if T == null, do nothing
+   |
+   |      if ( traversalOrder == PRE_ORDER ) {
+   |      
+10 |        visit(T);
+   |        traverse(T.llink, PRE_ORDER);
+   |        traverse(T.rlink, PRE_ORDER);
+   |      
+   |      } else if ( traversalOrder == IN_ORDER ) {
+15 |      
+   |        traverse(T.llink, IN_ORDER);
+   |        visit(T);
+   |        traverse(T.rlink, IN_ORDER);
+   |      
+20 |      } else if ( traversalOrder == POST_ORDER ) {
+   |
+   |        traverse(T.llink, POST_ORDER);
+   |        traverse(T.rlink, POST_ORDER);
+   |        visit(T);
+25 |      }
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 8.27 PreOrder Traversal of an Expression Tree Using a Stack */
+
+   |  void preOrderTraversal(TreeNode T) {
+   |  
+   |    Stack  S = new Stack();           // let S be an initially empty stack
+   |    TreeNode  N;                     // N points to nodes during traversal
+ 5 |
+   |    S.push(T);                // push the pointer T onto the empty stack S
+   |
+   |    while (!S.empty()) {
+   |  
+10 |      N = (TreeNode)S.pop();                // pop top pointer of S into N
+   |  
+   |      if (N != null) {
+   |        System.out.print(N.info);                  // print N's info field
+   |        S.push(N.rlink);                  // push the right pointer onto S
+15 |        S.push(N.llink);                   // push the left pointer onto S
+   |      }
+   |    
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 8.28 LevelOrder Binary Tree Traversal Using Queues */
+
+   |  void levelOrderTraversal(TreeNode T) {
+   |  
+   |    Queue Q = new Queue();             // let Q be an initially empty queue
+   |    TreeNode N;                       // N points to nodes during traversal
+ 5 |
+   |    Q.insert(T);                       // insert the pointer T into queue Q
+   |    
+   |    while (!Q.empty()) {
+   |    
+10 |      N = (TreeNode) Q.remove();               // remove first pointer of Q
+   |                                                       // and put it into N
+   |      if (N != null ) {
+   |        System.out.print(N.info);                   // print N's info field
+   |        Q.insert(N.llink)               // insert left pointer on rear of Q
+15 |        Q.insert(N.rlink)              // insert right pointer on rear of Q
+   |      }
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 8.31 Constructing and Searching a Binary Search Tree */
+
+    | import java.io.*;
+    | import java.applet.Applet;
+    |    
+    | public class BinaryTreeSearch extends Applet {    
+  5 |
+    |  // construct the binary search tree of Fig. 8.29, then search for ORD and DCA
+    |  public void init() {
+    |  
+    |  // begin by constructing an empty binary search tree
+ 10 |     BinarySearchTree T = new BinarySearchTree(); // T is initially empty
+    |    
+    |  // then use the insertion method to insert the keys of Table 8.30
+    |     T.insert("ORY");           // "ORY" is the key in the root of tree T
+    |     T.insert("JFK");
+ 15 |     T.insert("BRU");              // insert the remaining keys into T in
+    |     T.insert("DUS");                    // the order given by Table 8.30
+    |     T.insert("ZRH");
+    |     T.insert("MEX");
+    |     T.insert("ORD");
+ 20 |     T.insert("NRT");
+    |     T.insert("ARN");
+    |     T.insert("GLA");
+    |     T.insert("GCM");
+    |       
+ 25 |  // print out the tree that was constructed
+    |     System.out.println("The tree of Fig. 8.29 has been constructed and is:"); 
+    |     T.print();
+    |     System.out.println();
+    |    
+ 30 |  // search for the node with key "ORD"
+    |     System.out.println("We now search for the node with key \"ORD\"");
+    |     TreeNode N = T.find("ORD");
+    |     System.out.println("Key of node that was found = " + N.key);
+    |     System.out.println();
+ 35 |    
+    |  // now search for a key that is not in the tree
+    |     System.out.println("We now search for the node with key \"DCA\"");
+    |     TreeNode P = T.find("DCA");
+    |     if (P != null) {
+ 40 |       System.out.println("Key of node that was found = " + P.key);
+    |     } else {
+    |       System.out.println("Node that was found = null");
+    |     }
+    |     System.out.println();
+ 45 |      
+    |  }// end init()
+    |  
+    | }// end BinaryTreeSearch applet
+    |  
+ 50 | /*-------------------------------------------------------------*/
+    |  
+    | class TreeNode {                            // define the TreeNode class
+    |   ComparisonKey     key;
+    |   TreeNode          llink;
+ 55 |   TreeNode          rlink;
+    | }
+    |  
+    | /*-------------------------------------------------------------*/
+    | class BinarySearchTree {
+ 60 |    
+    |  // there is one private data field in a BinarySearchTree that holds a
+    |  // pointer to the root node of the binary search tree (or holds null for
+    |  // an empty tree)
+    |
+ 65 |     private TreeNode rootNode;
+    |    
+    |  // the various methods of the BinarySearchTree class follow:
+    |   
+    |   /*------------*/
+ 70 |  
+    |      /** this private auxiliary method is used by the insert method */
+    |  
+    |      private TreeNode insertKey(TreeNode T, ComparisonKey K) {
+    |        
+ 75 |        if (T == null) {
+    |          TreeNode N = new TreeNode();            // construct a new TreeNode
+    |          N.key = K;                                      // set its key to K
+    |          return N;                                          // and return it
+    |        } else {
+ 80 |          if ( K.compareTo(T.key) < 0 ) {   // if K is less than T's key then
+    |            T.llink = insertKey(T.llink, K);  // insert K in T's left subtree
+    |            return T;
+    |          } else {
+    |            T.rlink = insertKey(T.rlink, K);    // otherwise, insert K in T's
+ 85 |            return T;                                        // right subtree
+    |          }
+    |        }
+    |        
+    |      }//end insertKey()
+ 90 |  
+    |   /*------------*/
+    |   
+    |      /** this method inserts a new node containing key K into the tree */
+    |      
+ 95 |      void insert(ComparisonKey K) {
+    |        
+    |        // use the recursive auxiliary method insertKey 
+    |        // to do the actual work of insertion
+    |          rootNode = insertKey(rootNode,K);
+100 |        
+    |      }//end insert()
+    |   
+    |   /*------------*/
+    |   
+105 |      /** this is an overloaded version of insert() that takes a String argument */
+    |   
+    |      void insert(String K) {
+    |          rootNode = insertKey(rootNode,new StringKey(K));
+    |      }//end insert()
+    |  
+    |   /*------------*/
+    |     
+    |      /** the find() method returns a pointer to the TreeNode containing */
+    |      /** key K. Otherwise, it returns null if K is not in the tree */
+115 |      
+    |      TreeNode find(ComparisonKey K) {   
+    |                                       
+    |        TreeNode T = rootNode;
+    |        int result;
+120 |        
+    |        while (T != null) {
+    |          if ((result = K.compareTo(T.key)) < 0) {
+    |            T = T.llink;
+    |          } else if (result == 0) {
+125 |            return T;
+    |          } else {          
+    |            T = T.rlink;
+    |          }//end if
+    |        }
+130 |        
+    |        return T;                        // return null, if search failed
+    |        
+    |      }//end find()
+    |   
+135 |
+    |   /*------------*/
+    |      
+    |      /** overloaded version of find() that accepts a String argument */
+    |      
+140 |      TreeNode find(String K) {
+    |        return find(new StringKey(K));
+    |      }//end find()
+    |   
+    |
+145 |   /*------------*/
+    |
+    |      /** the private printNode() method is an auxiliary */
+    |      /** recursive method used by the print() method */
+    |      
+150 |      private void printNode(TreeNode N) {
+    |        
+    |        if (N != null) {                // do nothing if the node is null
+    |          System.out.print("(");
+    |          printNode(N.llink);
+155 |          System.out.print("  " + N.key + "  ");
+    |          printNode(N.rlink);
+    |          System.out.print(")");
+    |        }
+    |        
+160 |      }//end printNode
+    |      
+    |  
+    |   /*------------*/
+    |   
+165 |      /** the print() method prints a parenthesized version */
+    |      /** of the tree showing the subtree structure */
+    |      
+    |      void print() {
+    |        
+170 |        printNode(rootNode);
+    |        System.out.println();
+    |  
+    |      }//end print()
+    |  
+175 |    /*------------*/
+    |    
+    | }//end class BinarySearchTree
+    |  
+    |  
+180 | /*-------------------------------------------------------------*/
+    |  
+    |  
+    | interface ComparisonKey {
+    |    
+185 |  // if k1 and k2 are ComparisonKeys, k1.compareTo(k2) is
+    |  // 0, +1, or -1 according as k1 == k2,  k1 > k2, or k1 < k2 in
+    |  // the order defined by the compareTo method
+    |    
+    |     int compareTo(ComparisonKey value);
+190 |    
+    |    
+    |  // converts item to printable string
+    |    
+    |     String toString();   
+195 |  
+    | }//end interface
+    |  
+    | /*-------------------------------------------------------------*/
+    |  
+200 |  
+    | class StringKey implements ComparisonKey {
+    |      
+    |    // the key data field holds the String that is the value of the key
+    |      
+205 |       private String key;
+    |      
+    |   /*-----------------*/
+    |      
+    |    // the single String-argument constructor sets the key to its argument
+210 |      
+    |       StringKey(String value) {
+    |         key = value; 
+    |       }
+    |      
+215 |   /*-----------------*/
+    |      
+    |    // the toString() method converts a StringKey into a string
+    |      
+    |       public String toString() {
+220 |         return key;  
+    |       }
+    |  
+    |   /*-----------------*/
+    |    
+225 |    // the k1.compareTo(k2) method is a three-way comparison of two
+    |    // keys, k1 and k2, that returns 0, 1, or -1 when k1 == k2, k1 > k2,
+    |    // or k1 < k2, respectively
+    |      
+    |       public int compareTo(ComparisonKey value) {
+230 |         String a = this.key;
+    |         String b = ((StringKey)value).key;
+    |         return a.compareTo(b);    // uses the inherited compareTo method
+    |       }                              // defined already for Java Strings
+    |      
+235 |   /*-----------------*/
+    |    
+    | }//end StringKey class
+    |  
+    |  
+240 | /*-------------------------------------------------------------*/
+    | 
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 8.57 Preliminary Graph Searching Strategy */
+
+   |  void graphSearch(G,v) {           // search graph G starting at vertex v
+   |  
+   |    (let G = (V,E) and let v in V be a vertex of G.)
+   |
+ 5 |    for (each vertex w in V that is accessible from v) {
+   |      visit(w);
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 8.58 First Refinement */
+
+   |  void graphSearch(G,v) {          // search graph G beginning at vertex v
+   |  
+   |    (let G = (V,E) be a graph.)
+   |    (let C be an empty container.)
+ 5 |
+   |      for (each vertex x in V) {
+   |        x.visited = false;   // mark each vertex x in V as being unvisited
+   |      }
+   |  
+10 |    // use vertex v in V as a starting point, and put v in container C
+   |
+   |       (put v into C);
+   |  
+   |       while (C is non-empty) {
+15 |
+   |        (remove a vertex x from container C);
+   |
+   |        if (!(x.visited)) {       // if vertex hasn't been visited already
+   |          visit(x);                                   // visit x, and then
+20 |          x.visited = true;              // mark x as having been visited.
+   |          for (each vertex w in Vx) {      // enter all unvisited vertices
+   |            if (!(w.visited))  (put w into C);             // of Vx into C
+   |          }
+   |        }
+25 |      }
+   |  
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 8.61 Exhaustive Version of Graph Searching */
+
+   |  void exhaustiveGraphSearch(G) {
+   |  
+   |    (let G = (V,E) be a graph.)
+   |
+ 5 |    for (each vertex v in V) {            // perform Program Strategy 8.58
+   |      graphSearch(G,v);                                 // for each v in V
+   |    }
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 8.63 Topological Ordering */
+
+   |  List topologicalOrder(Graph G) {
+   |  
+   |    (let G = (V,E) be a graph.)
+   |    (let L be a list of vertices.)                       // see Figure 6.4
+ 5 |    (let Q be a queue of vertices.)                // for queue operations
+   |    (let D[V] be an array of integers indexed by vertices in V.)
+   |
+   |    // compute the in-degrees D[x] of the vertices x in G
+   |       for (each vertex x in V) D[x] = 0;       // initialize D[x] to zero
+10 |       for (each vertex x in V) {
+   |         for (each successor w in Succ(x)) D[w]++;
+   |       }
+   |
+   |    // initialize the queue Q to contain all vertices having zero in-degrees
+15 |       Q = new Queue();              // initialize Q to be the empty queue
+   |       for (each vertex x in V) {                       // insert x on the
+   |         if (D[x] == 0) Q.insert(x);             // rear of Q if D[x] == 0
+   |       }
+   |
+20 |    // initialize the list L to be the empty list
+   |       L = new List();
+   |
+   |    // process vertices in the queue Q until the queue becomes empty
+   |       while (!Q.empty()) {
+25 |         x = Q.remove();            // remove vertex x from the front of Q
+   |         L.append(x);                    // insert x on the rear of list L
+   |         for (each successor w in Succ(x)) {
+   |            D[w]--;                     // decrease predecessor count of w
+   |            if (D[w] == 0) Q.insert(w);       // insert w on the rear of Q
+30 |          }
+   |       }
+   |
+   |    // the list L now contains the vertices of G in topological order.
+   |       return L;
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+

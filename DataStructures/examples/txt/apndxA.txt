@@ -1,0 +1,25 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program A.2 The Sum of the Squares */
+
+   |  int sumSquares(int n) {       // find the sum of 1^2 + 2^2 + . . . + n^2
+   |    
+   |    int partialSum;              // let partialSum contain a running total
+   |                                // of the squares 1^2 + 2^2 + . . . + i^2.
+ 5 |    partialSum = 0;                   // initially, let partialSum be zero
+   |    
+   |    int i = 1;            // let i be a counting variable initialized to 1
+   |    
+   |    while (i <= n) {                    // for each value of i from 1 to n
+10 |      partialSum += i*i;                // add i^2 to the running total in
+   |      i++;                                      // the variable partialSum
+   |    }
+   |    
+   |    return partialSum;      // return the total of 1^2 + 2^2 + . . . + n^2
+15 |                                  // as the value of the method sumSquares
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+

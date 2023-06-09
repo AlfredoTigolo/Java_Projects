@@ -1,0 +1,78 @@
+package file_io;
+import java.io.*;
+import java.util.*;
+
+public class RandomAccess4{
+  public static void main(String[] args) throws InterruptedException, IOException {
+     int maxsize = 100;
+     String outfile = "num.csv";
+     File out = new File(outfile);
+     BufferedWriter outbuf = new BufferedWriter(new FileWriter(outfile));
+
+     for (int i=0; i < maxsize; i++){   // random generator
+          if((i + 1)%10 != 0)
+            outbuf.write((int) (1000*Math.random()) + ",");
+          else
+            outbuf.write((int) (1000*Math.random()) + "\n");
+     }
+     outbuf.close(); //Remember to close the file. Otherwise it is still waiting for input.
+
+    BufferedReader inbuf = new BufferedReader(new FileReader(outfile));
+    String line = null;
+    line = inbuf.readLine(); //read into the first line of the file num.csv
+
+    RandomAccessFile raf = new RandomAccessFile(outfile, "r");
+    myMax2 newMax = new myMax2(outfile);
+    long pointerEnd = raf.length()/2;
+//    newMax.run(raf, 0, pointerEnd);
+
+    long pointerStart = pointerEnd;
+    pointerEnd = raf.length();
+    newMax.run(raf, 0, pointerEnd);
+        System.out.println(newMax.getMax());
+      int mymax = newMax.getMax();
+    newMax.run(raf,pointerStart, pointerEnd);
+        System.out.println(newMax.getMax());
+      int mymax2 = newMax.getMax();
+    System.out.println("The maximum integer from the file is: " + Math.max(mymax, mymax2));
+  } //end of main()
+}//end of class MaxTest{}
+
+class myMax2 extends Thread {
+  String obj = null;
+  private RandomAccessFile raf;
+  private String line;
+  private int max;
+
+    public myMax2(){ }
+    public myMax2(String st) throws IOException{
+      this.obj = st;
+      raf = new RandomAccessFile(obj, "r");
+      }
+  public void run(RandomAccessFile raf, long pointerStart, long pointerEnd) throws IOException{
+//  public void run(RandomAccessFile raf) throws IOException{
+//    long pos = 0, pointerstart = 0;
+    long pos = 0, pointerE = pointerEnd;
+//    pointerstart = raf.length()/2;
+    int tmp = 0;
+    max = 0;
+    StringTokenizer stToken = null;
+    raf.seek(pointerStart); //Start from the beginning of the file.
+
+    while(raf.getFilePointer() < pointerE){ // pointerstart + 4 = the end of the pointer + 4 bytes (since an integer contains 4 bytes. So that it will read all values up to the middle of the file)
+      pos = raf.getFilePointer();
+      line = raf.readLine();
+      stToken = new StringTokenizer(line, ",");
+      while(stToken.hasMoreTokens()){
+//        System.out.println(stToken.nextToken());
+      tmp = Integer.parseInt(stToken.nextToken());
+//      System.out.println("tmp = " + tmp);
+      if(max <= tmp){ max = tmp;}
+
+      }//end of inner WHILE()
+    }//end of outer WHILE()
+//  System.out.println(max);
+  }  //end of run()
+
+  public int getMax(){return max;}
+}//end of class FindMax{}

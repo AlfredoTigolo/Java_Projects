@@ -1,0 +1,948 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.3 The Winner Detector Applet */
+
+   | import java.applet.*;
+   | import java.util.StringTokenizer;
+   | import java.awt.*;
+   |  
+ 5 |
+   | public class WinnerDetector extends Applet implements ActionListener  {
+   |    
+   | // declare the applet's data fields as follows:
+   |
+10 |    Label
+   |      instructionLabel,           // gives the instructions for user input
+   |      inputLabel,                             // labels the input text box
+   |      outputLabel;                           // labels the output text box
+   |
+15 |    TextField
+   |      inputField,                                    // the input text box
+   |      outputField;                                  // the output text box
+   |
+   |    Translator Trans;   // the object that translates inputs and solutions
+20 |
+   | // now give the Applet's methods
+   |
+   |  /*-----------*/
+   |
+25 |    /** the init() method constructs the GUI and the Translator object, Trans */
+   |  
+   |    public void init() {
+   |    
+   |      constructGUI();             // construct the applet's user interface
+30 |      
+   |      Trans = new Translator();          // create a new Translator object
+   |      
+   |    }//end init
+   |  
+35 |  /*-----------*/
+   |
+   |    /** the actionPerformed() method handles user input text */
+   |    /** events by sending  the user's input string containing six */
+   |    /** substrings for the six dollar amounts to the Translator object, */
+40 |    /** Trans, and by getting the output string back from Trans to */
+   |    /** display in the output box */
+   |  
+   |    public void actionPerformed(ActionEvent e)  {
+   |  
+45 |      Trans.setInput(e.getActionCommand());        // send input string to
+   |                                                      // Translator object
+   |      outputField.setText(Trans.getOutput());  // put result in output box
+   |  
+   |    }//end actionPerformed
+50 |  
+   |  /*-----------*/
+   |
+   |    private void constructGUI() {
+55 |  
+   |    // place user instructions in the GUI
+   |       instructionLabel = new Label(
+   |           "Type six dollar amounts separated by spaces, and press Enter.",
+   |             Label.CENTER
+60 |       ); 
+   |       add(instructionLabel);  // add instruction label to top of applet layout
+   |
+   |    // install an input text field in the GUI
+   |       inputLabel = new Label("  input:");           // add an input label
+65 |       add(inputLabel);
+   |       inputField = new TextField(45);   // create a 45-column input field
+   |       add(inputField);         // and add it to the layout in the applet.
+   |       inputField.addActionListener(this); // then attach an event handler
+   |    
+70 |    // install an output text field in the GUI
+   |       outputLabel = new Label("output:");          // add an output label
+   |       add(outputLabel);
+   |       outputField = new TextField(45); // create a 45-column output field
+   |       add(outputField);         // and add it to the layout in the applet
+75 |    
+   |    // focus GUI attention on the input text field
+   |       inputField.requestFocus();  // put blinking text cursor in inputField
+   |    
+   |    }//end constructGUI
+80 |    
+   |  /*-----------*/
+   |    
+   | }//end applet
+   |    
+85 | /*--------------------------------------------------------*/
+   |
+   | /* ---< insert here the text of Programs C.4 and one of C.15 or C.17 >--- */
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.4 The Translator Class */
+
+   | /** the Translator object has two public methods that the event handler */
+   | /** of the WinnerDetector applet calls. After the Translator object, Trans, */
+   | /** is constructed by calling "new Translator();" the WinnerDetector applet */
+   | /** passes the user's input string to it by calling "setInput()," after which */
+ 5 | /** the Winner Detector causes Trans to compute and return the result  */
+   | /** string,using the method call, "Trans.getOutput()"  */
+   |  
+   | class Translator {
+   |    
+10 |    private String inputString, outputString;
+   |    
+   |    private int[] inputArray = {0, 0, 0, 0, 0, 0};  // holds six inputs in
+   |                                                    // the inputArray[0:5]
+   |  
+15 |  /*-----------*/
+   |  
+   |    public void setInput(String input) {
+   |      
+   |      inputString = input;  // store the user's input string in inputString field
+20 |      
+   |    } // end setInput
+   |    
+   |  /*-----------*/
+   |  
+25 |    public String getOutput() {
+   |      
+   |    // convert input text string to an integer array
+   |       convertInputTextToArray();
+   |      
+30 |    // construct a Table object
+   |       Table T = new Table();
+   |      
+   |    // pass input array to Table object
+   |       T.getInput(inputArray);
+35 |      
+   |    // have the Table object find the winning amount and return it
+   |       return "You just won $" + T.findWinningAmount();
+   |      
+   |    }//end getOutput
+40 |  
+   |  /*-----------*/
+   |    
+   |    private void convertInputTextToArray() {
+   |      
+45 |      int i = 0;                       // index for the inputArray's items
+   |      String token;                    // contains the string for the next
+   |                                            // input token from the parser
+   |      StringTokenizer parser = new StringTokenizer(inputString," ",true);
+   |    
+50 |      while (parser.hasMoreTokens()) {
+   |        token = parser.nextToken();
+   |        if ( (token.length() == 1) && (token.charAt(0) == ' ') ) {
+   |                                                   // if token was a space
+   |          /* do nothing */;                        // ignore it, otherwise
+55 |        } else {                  // place input amount into inputArray[i]
+   |          if (i < 6) {
+   |            inputArray[i++] = Integer.parseInt(token);
+   |          }
+   |        } 
+60 |      }//end while
+   |  
+   |    }//end convertInputTextToArray()
+   |    
+   |  /*-----------*/
+65 |    
+   | }//end class Translator
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy C.7 Template for theTable Class */
+
+   |  class Table {  
+   |        
+   |   // declare private data fields hidden inside the Table class
+   |      private int [] inputArray;  // saves a sharable copy of the input array
+ 5 |             // plus, various private fields to store the table's contents  
+   |
+   |   // define publicly accessible interface methods for a Table object T  
+   |      public void T.getInput(int[] A) { ... }
+   |      public int   T.findWinningAmount() { ... }
+10 |    
+   |   // define private methods used to implement the public methods
+   |      private void  makeTable()  { ... }
+   |      private void  insertAmount(int amt)  { ... }
+   |      private int  winningAmount()  { ... }
+15 |
+   |  } // end class Table
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy C.8 Making the Table */
+
+   |  private void makeTable()  {                   // make a table of amounts
+   |                                                  // and their repetitions
+   |    (initialize the table to be empty)
+   |  
+ 5 |    (insert each of the six input amounts into the table)
+   |      for (i = 0; i < 6; ++i) {
+   |    
+   |        (insert the amount inputArray[i] into the table)
+   |          insertAmount(inputArray[i]);
+10 |    
+   |      }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy C.9 Inserting an Amount into the Table */
+
+   |  private void insertAmount(int amountToInsert)  {     // insert an amount
+   |                // into the table
+   |
+   |    (if one of the rows in the table already contains the amount to insert,)
+ 5 |    (increase the number of repetitions in the row and exit the method)
+   |    
+   |      for (each row in the table)  {
+   |        if ( (the row's amount) == amountToInsert )  {
+   |          (increase the row's repetition count by one)
+10 |          (and return from the method)
+   |        }
+   |      }
+   |  
+   |    (if no row's amount matched the amount to insert, then add a new row to)
+15 |    (the table containing the amount to insert and a repetition count of one)
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy C.10 Returning the Winning Amount */
+
+   |  private int winningAmount() {   // search the table for a row having the
+   |                                          // largest amount repeated three
+   |    int amountWon;                          // or more times and return it
+   |
+ 5 |    (initially establish the amountWon to be zero.)
+   |    (it will remain 0 unless a higher amount is discovered during the search.)
+   |  
+   |    (search the table to find the largest amount won among the rows)
+   |    (having three or more repetitions)
+10 |
+   |      for (each row in the table) {
+   |        if ( (the row's number of repetitions >= 3) && 
+   |                         (the row's amount > amountWon)  ) {
+   |          amountWon = (the row's amount);
+15 |        }
+   |      }
+   |  
+   |    return amountWon;
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.11 The Row Class */
+
+   |  class Row {
+   |    
+   |   // each Row object has two data fields
+   |      int  amount;
+ 5 |      int  repetitions;
+   |
+   |   // there is one Row constructor defined
+   |      Row(int amt, int reps) {
+   |        amount = amt;
+   |        repetitions = reps;
+   |      }
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.12 Making the Table */
+
+   |  private void makeTable()  {                 // create a table of amounts
+   |                                                  // and their repetitions
+   |   // initialize the table to be empty
+   |      rowArray = new Row[6];
+ 5 |      numberOfRows = 0;     // initially there are no rows in the rowArray
+   |
+   |   // insert each of the six input amounts into the table
+   |      for (int i = 0; i < 6; i++) {
+   |        insertAmount(inputArray[i]);
+10 |      }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.13 Inserting an Amount into the Table */
+
+   |  private void insertAmount(int amountToInsert) {      // insert an amount
+   |                                                         // into the table
+   |   // if one of the rows in the table already contains the amountToInsert
+   |   // increase the number of repetitions in that row and exit the method
+ 5 |      for (int j = 0; j < numberOfRows; j++) {
+   |        if (rowArray[j].amount == amountToInsert) {
+   |          rowArray[j].repetitions++;          // increase repetition count
+   |          return;                                              // and exit
+   |        }
+10 |      }
+   |
+   |   // otherwise, if no row's amount matched the amountToInsert,
+   |   // then add a new row to the table containing the amountToInsert
+   |   // and a repetition count of one; then increase the numberOfRows
+15 |   // by one.
+   |      rowArray[numberOfRows] = new Row(amountToInsert, 1);
+   |      numberOfRows++;
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.14 Finding and Returning the Winning Amount */
+
+   |  private int winningAmount() {   // search the table for a row having the
+   |                                         // largest amount repreated three
+   |    int amountWon;                          // or more times and return it
+   |
+ 5 |    // initially establish the amountWon to be zero.
+   |    // it will remain 0 unless a higher amount is
+   |    // discovered during the search.
+   |       amountWon = 0;
+   |
+10 |    // search the table to find the largest amount won among rows
+   |    // having three or more repetitions
+   |
+   |       for (int i = 0; i < numberOfRows; i++) {
+   |         if ( (rowArray[i].repetitions >= 3) &&
+15 |                  (rowArray[i].amount > amountWon) ) {
+   |             amountWon = rowArray[i].amount;
+   |         }
+   |       }
+   |  
+20 |    // finally, return the integer for the amount won
+   |       return amountWon;
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.15 Final Assembly of Components into the Table Class */
+
+   |  class Table {  
+   |        
+   |   // declare three private data fields hidden inside the Table class
+   |      private int[] inputArray;        // holds the array of input amounts
+ 5 |      private Row[] rowArray;               // gives the rows of the table
+   |      private int   numberOfRows;       // the number of rows in the table
+   |
+   |   // define publicly accessible interface methods for a Table object
+   |  
+10 |      public void getInput(int[] A) {
+   |        inputArray = A;
+   |      }
+   |
+   |      public int findWinningAmount() {
+15 |        makeTable();              // make table of amounts and repetitions
+   |        return winningAmount();       // find winning amount and return it
+   |      }
+   |
+   |   // define private methods used to implement the public methods
+20 |      private void  makeTable()  { ... }            // insert Program C.12
+   |      private void  insertAmount(int amt)  { ... }  // insert Program C.13
+   |      private int  winningAmount()  { ... }         // insert Program C.14
+   |
+   |  }//end class Table
+25 |
+   |  /* ---<insert here the definition of the Row class from Program C.11 >--- */
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.16 Finding and Returning the Winning Amount */
+
+   |  private int winningAmount() {
+   |  
+   |    int  amountWon;             // amountWon is the winning amount, if any
+   |    int  i;                            // i is an index for the inputArray
+ 5 |
+   |    // initially establish the amountWon to be zero
+   |       amountWon = 0;
+   |      
+   |    // for each possible starting position i = 0,1,2, and 3, where a run
+10 |    // of three identical values could start in the sorted inputArray,
+   |    // check to see if a run of three exists, and exit if it does.
+   |       for (i = 0; i < 4; i++)  {
+   |         if ( (inputArray[i] == inputArray[i+1])
+   |              &&  (inputArray[i+1] == inputArray[i+2]) ) {
+15 |             amountWon = inputArray[i];      // a winning amount was found
+   |             break;       // exit for-statement after winning amount found
+   |         }
+   |       }
+   |
+20 |    // return the integer amount won
+   |       return amountWon;
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.17 Second Final Assembly of Components into the Table Class */
+
+   |  class Table {  
+   |        
+   |    // declare the inputArray as a hidden data field of the Table class
+   |       private int[] inputArray;       // holds the array of input amounts
+ 5 |            
+   |    // define publicly accessible interface methods for a Table object
+   |  
+   |       public void getInput(int[] A) {
+   |         inputArray = A;
+10 |       }
+   |
+   |       public int findWinningAmount() {
+   |         selectionSort(inputArray,0,5);     // sort the inputArray amounts
+   |                                                  // into descending order
+15 |         return winningAmount();      // find winning amount and return it
+   |       }
+   |
+   |    // define private methods used to implement the public methods
+   |       private int  winningAmount() { ... }         // insert Program C.16
+20 |       private void  selectionSort()  { ... }       // insert Program C.19
+   |       private int  findMax()  { ... }              // insert Program C.20
+   |
+   |  }//end class Table
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy C.18 Selection Sorting */
+
+   |  void selectionSort(int[] A, int m, int n) {
+   |  
+   |    if (there is more than one number to sort) {
+   |  
+ 5 |      (let maxPosition be the index of the largest element in A[m:n] )
+   |    
+   |      (exchange A[m] <--> A[maxPosition] )
+   |    
+   |      (selectionSort the subarray A[m+1:n] )
+10 |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.19 Selection Sorting */
+
+   |  void selectionSort(int[]A, int m, int n) {
+   |  
+   |    int  maxPosition;      // maxPosition is the index of A's biggest item
+   |    int  temp;                      // temp is used to exchange items in A
+ 5 |
+   |    if (m < n) {               // if there is more than one number to sort
+   |    
+   |      // let maxPosition be the index of the largest number in A[m:n]
+   |         maxPosition = findMax(A,m,n);
+10 |      
+   |      // exchange A[m] <--> A[maxPosition]
+   |         temp = A[m];
+   |         A[m] = A[maxPosition];
+   |         A[maxPosition] = temp;
+15 |      
+   |      // selectionSort the subarray A[m+1:n]
+   |         selectionSort(A, m+1, n);
+   |    }
+   |  
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.20 Finding the Position of the Largest Number */
+
+   |  int findMax(int[] A, int m, int n) {                       // assume m<n
+   |  
+   |
+   |    int i = m;      // i is an index that visits all positions from m to n
+ 5 |    int j = m;     // j is an index that saves the position of the largest
+   |                              // number previously found during the search
+   |    
+   |    do {
+   |      i++;                       // advance i to point to next number A[i]
+10 |      if ( A[i] > A[j] ) {         // if A[i] > largest previous A[j] then
+   |        j = i;         // save the position, i, of the largest number in j
+   |      }
+   |    } while (i != n);           // stop when all i in m:n have been tested
+   |  
+15 |
+   |    return j;                       // return j == position of the largest
+   |                                                  // number A[j] in A[m:n]
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.21 Finding the Position of the Largest Item */
+
+   |  int findMax(int[] A, int m, int n) {
+   |  
+   |
+   |    // precondition: m < n
+ 5 |    // postcondition: returns position of largest item in subarray A[m:n]
+   |  
+   |    int i;
+   |    int j;
+   |  
+10 |    i = m;
+   |    j = m;
+   |  
+   |      {<> ( i == m) and (j == m) and (m < n) <>}
+   |  
+15 |    do {
+   |    
+   |      i++ ;      
+   |      
+   |      if ( A[i] > A[j] )  j = i;  
+20 |      
+   |        {<> loop invariant: A[j] >= A[m:i] and (i <= n) <>}
+   |      
+   |    } while ( i  != n );
+   |  
+25 |      {<> final assertion: A[j] >= A[m:n] <>}
+   |  
+   |    return j;            // return j as position of largest item in A[m:n]
+   |  
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.22 Selection Sorting */
+
+   |  void selectionSort(int[] A, int m, int n)  {
+   |  
+   |
+   |    // precondition: m <= n
+ 5 |    // postcondition: A[m:n] is sorted such that: A[m] >= A[m+1] >= ... >= A[n]
+   |
+   |    int maxPosition;
+   |    int temp;
+   |  
+10 |    if (m < n) {                 // if there is more than one item to sort
+   |    
+   |      maxPosition = findMax(A,m,n);
+   |      
+   |        {<> A[maxPosition] >= A[m:n] <>}
+15 |      
+   |      // exchange A[m] <--> A[maxPosition]
+   |      temp = A[m]; A[m] = A[maxPosition]; A[maxPosition] = temp;
+   |      
+   |        {<> A[m] >= A[m:n] <>}
+20 |      
+   |      selectionSort(A, m+1, n);  {<> yields: A[m+1] >= A[m+2] >= ... >= A[n] <>}
+   |      
+   |        {<> A[m] >= A[m+1] >= ... >= A[n] <>}
+   |      
+25 |    }
+   |  
+   |      {<> final assertion: A[m] >= A[m+1] >= ... >= A[n] <>}
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.23 Impish Selection Sorting */
+
+   |  void impishSelectionSort(int[] A, int m, int n) {
+   |  
+   |
+   |    // precondition: m <= n
+ 5 |    // postcondition: A[m:n] is sorted such that: A[m] >= A[m+1] >= ... >= A[n]
+   |
+   |    int i;
+   |  
+   |    for (i = m; i <= n; i++) {
+10 |      A[i] = A[m];
+   |    }
+   |      {<> final assertion: A[m] >= A[m+1] >= ... >= A[n] <>}
+   |  
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.29 Recursive Selection Sorting Without Comments */
+
+   |  void  selectionSort(int[] A, int m, int n)  {  
+   |  
+   |    int maxPosition, temp;
+   |
+   |    if ( m < n )  {
+ 5 |      maxPosition = findMax(A,m,n);
+   |      temp = A[m]; A[m] = A[maxPosition]; A[maxPosition] = temp;
+   |      selectionSort(A, m+1, n);
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.31 Selection Sorting after Tail-Recursion Elimination */
+
+   |  void  selectionSort(int[] A, int m, int n) {
+   |  
+   |    int maxPosition, temp;
+   |
+ 5 |    while ( m < n ) {
+   |      maxPosition = findMax(A,m,n);
+   |      temp = A[m]; A[m] = A[maxPosition]; A[maxPosition] = temp;
+   |      A = A; m = m+1; n = n;
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.32 Selection Sorting After Useless Assignment Elimination */
+
+   |  void  selectionSort(int[] A, int m, int n) {
+   |  
+   |    int maxPosition, temp;
+   |
+ 5 |    while ( m < n ) {
+   |      maxPosition = findMax(A,m,n);
+   |      temp = A[m]; A[m] = A[maxPosition]; A[maxPosition] = temp;
+   |      m++;
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.33 Finding the Position of the Largest Number */
+
+   |  int findMax(int[] A, int m, int n)  {                      // assume m<n
+   |  
+   |    int i, j;
+   |    
+ 5 |    i = m; j = m;
+   |    do {
+   |      i++;      
+   |      if ( A[i] > A[j] )  j = i;
+   |    } while (i != n );
+10 |    return j; 
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.34 Almost Final Iterative Selection Sorting */
+
+   |  selectionSort(int[] A, int m, int n) {
+   |  
+   |    int maxPosition, temp, i, j;
+   |
+ 5 |    while ( m < n ) {
+   |    
+   |      i = m; j = m;
+   |      do {
+   |        i++;      
+10 |        if ( A[i] > A[j] ) j = i;
+   |      } while ( i != n );
+   |      maxPosition = j; 
+   |    
+   |      temp = A[m]; A[m] = A[maxPosition]; A[maxPosition] = temp;
+15 |    
+   |      m++;
+   |    }
+   |    
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.35 Iterative Selection Sorting from Transformations */
+
+   |  void selectionSort(int[] A, int m, int n) {
+   |  
+   |    int maxPosition, temp, i;
+   |
+ 5 |    while ( m < n ) {
+   |    
+   |      i = m; 
+   |      maxPosition = m;
+   |
+10 |      do {
+   |        i++;      
+   |        if ( A[i] > A[maxPosition] ) maxPosition = i;
+   |      } while (i != n);
+   |    
+15 |      temp = A[m]; A[m] = A[maxPosition]; A[maxPosition] = temp;
+   |    
+   |      m++;
+   |    }
+   |    
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.39 Investment Growth under Compound Interest */
+
+   |  double compound(double A, double r, int n) {
+   |  
+   |    return ( A * power(1 + r/100, n) );
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.40 Stub for power(x,n) */
+
+   |  double power(double x, int n) {
+   |  
+   |    if ( (x == 1.00) || (n == 0) )  {
+   |      return 1.00;          // since 1^n == 1 and x^0 == 1 for any x and n
+ 5 |    } else if ( (x == 1.06) && (n == 5) ) {
+   |      return 1.3382256;                        // since 1.065 == 1.3382256
+   |    }
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.41 Iterative Binary Search */
+
+   |  int binarySearch(int K) {  // to find the position of the integer search
+   |                                    // key K in the ordered array A[0:n-1]
+   |
+   |      int L;                      // L == left boundary of search interval
+ 5 |      int midpoint;             // midpoint == midpoint of search interval
+   |      int R;                     // R == right boundary of search interval
+   |  
+   |   // initializations
+   |      L  = 0;                // initially, L is the leftmost index, 0, and
+10 |      R =  n - 1;                       // R is the rightmost index, n - 1
+   |    
+   |
+   |   // while the interval L:R is non-empty test K against the middle key
+   |
+15 |      while ( L <= R )  {               // while the interval is non-empty
+   |    
+   |        midpoint = (L+R) / 2;          // compute midpoint of interval L:R
+   |
+   |        if ( K == A[midpoint] ) {   // if key K was found at the midpoint,
+20 |                                               // return from the function
+   |          return midpoint;                  // with midpoint as the result
+   |                
+   |        } else if ( K > A[midpoint] )  {      // otherwise, if K is to the
+   |                                          // right of the midpoint, search
+25 |          L = midpoint + 1;           // next in the interval midpoint+1:R
+   |
+   |        } else {                                 // whereas if K is to the
+   |                                           // left of the midpoint, search
+   |          R = midpoint - 1;           // next in the interval L:midpoint-1
+30 |        }
+   |      
+   |      }
+   |
+   |  
+35 |   // if the search interval became empty, key K was not found
+   |
+   |      return - 1;                        // -1 means K was not in A[0:n-1]
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.42 Recursive Binary Search */
+
+   |  int binarySearch(int K, int L, int R) {
+   |  
+   |    // to find the position of the search key K in the subarray A[L:R].
+   |    // note: To search for K in A[0:n-1], the initial call is 
+ 5 |    // binarySearch(K,0,n-1).
+   |  
+   |    int midpoint;
+   |
+   |    midpoint = (L+R)/2;                // compute midpoint of interval L:R
+10 |  
+   |    if  ( L > R) {                 // if the search interval is empty then
+   |      return -1;                 // return -1 to signal K is not in A[L:R]
+   |    } else if ( K == A[midpoint] )  {
+   |      return midpoint;
+15 |    } else if ( K > A[midpoint] ) {
+   |      return binarySearch(K, midpoint+1, R);
+   |    } else {
+   |      return binarySearch(K, L, midpoint-1);
+   |    }
+20 |  
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.46 Mystery Program‹What Does This Do? */
+
+   |  float g(float x, int n)  {
+   |  
+   |    float p;
+   |  
+ 5 |    if ( n == 0 ) {
+   |    
+   |      return 1.0;
+   |    
+   |    } else {
+10 |    
+   |      p = g(x, n / 2);
+   |    
+   |      if ( n%2 == 0 ) { 
+   |        return p * p; 
+15 |      } else {
+   |        return x * p * p;
+   |      }
+   |    
+   |    }
+20 |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.47 Average Rainfall with Bug */
+   /** (translated into Java with permission of the Association */
+   /** for Computing Machinery, Copyright © 1986) */
+
+   |  /* Program to compute the average rainfall in New Haven */
+   |  
+   |  // a translation into Java from Soloway, CACM 9-86, p. 853
+   |  
+ 5 |  
+   |  void computeAverageRainfall () {
+   |
+   |    float   sum, rainfall, average;
+   |    int     count;
+10 |  
+   |    sum    =  0.0;
+   |    count  =    0;
+   |  
+   |    GUI.promptUser("Please input a rainfall: ");
+15 |    rainfall = GUI.getFloatInputFromUser();
+   |  
+   |    while ( rainfall != 99999.0 ) {
+   |    
+   |      while ( rainfall < 0.0 ) {     
+20 |        GUI.promptUser("Rainfall cannot be <0. Input again: ");
+   |        rainfall = GUI.getFloatInputFromUser();
+   |      }
+   |
+   |      sum += rainfall;
+25 |      count++;
+   |      GUI.promptUser("input a rainfall: ");
+   |      rainfall = GUI.getFloatInputFromUser();
+   |    }
+   |  
+30 |    
+   |    if ( count > 0 ) { 
+   |      average = sum/count;
+   |      GUI.displayOutput("Average rainfall = " + average);
+   |    } else {
+35 |      GUI.displayOutput("No valid inputs. No average calculated.");
+   |    }
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.48 Average Rainfall with Bug Fixed */
+
+   |  /* Program to compute the average rainfall in New Haven with bug fixed */
+   |  
+   |  class NewHavenRainfall {
+   |  
+ 5 |    private final static float SENTINEL = 99999.0;
+   |    private float    sum, rainfall;
+   |    private int      count;
+   |  
+   |    float getValidInputFromUser() {             // a valid input is either
+10 |                                    // a non-negative rainfall observation
+   |      float rainfall;                                   // or the sentinel
+   |       
+   |      GUI.promptUser("Please input a rainfall or 99999 to stop: ");
+   |      rainfall = GUI.getFloatInputFromUser();
+15 |    
+   |      while ( rainfall < 0.0) {
+   |        GUI.promptUser("Rainfall cannot be < 0. Input again: ");
+   |        rainfall = GUI.getFloatInputFromUser();
+   |      }
+20 |    
+   |      return rainfall;
+   |    }
+   |  
+   |    void computeAverageRainfall()  {
+25 |
+   |      sum    =   0.0;
+   |      count  =  0;
+   |  
+   |      rainfall = getValidInputFromUser();
+30 |    
+   |      while ( rainfall != SENTINEL ) {
+   |        sum += rainfall;
+   |        count++;
+   |        rainfall = getValidInputFromUser();
+35 |      }
+   |  
+   |      if ( count > 0 ) { 
+   |        GUI.displayOutput("Average rainfall = " + (sum/count) );
+   |      } else {
+40 |        GUI.displayOutput("No valid inputs. No average calculated.");
+   |      }
+   |    }
+   |
+   |  }//end class NewHavenRainfall
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.49 Loop-Exit Control Structure */
+
+   |  loop
+   |    rainfall := GetValidInputFromUser;
+   |    exit when (rainfall = sentinel);
+   |    sum := sum + rainfall;
+35 |    count := count + 1;
+   |  end loop;
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program C.50 A Solution in Java Using a While-Loop with a Break */
+
+   |  while ( true ) {
+   |    rainfall = getValidInputFromUser();
+   |    if ( rainfall == SENTINEL ) break;
+   |    sum += rainfall;
+35 |    count++;
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+

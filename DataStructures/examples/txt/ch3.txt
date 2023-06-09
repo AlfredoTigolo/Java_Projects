@@ -1,0 +1,337 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 3.15 Inserting a Second Node for BRU in a List (DUS,ORD,SAN) */
+
+   |  void insertNewSecondNode(BRU) {    // let the initial list L be given by
+   |                                                    // L = (DUS, ORD, SAN)
+   |
+   |    (declare a pointer variable newNode, that can point to list nodes)
+   |
+ 5 |    (construct a new node and let the pointer variable newNode point to it)
+   |    (set the airport field of the newNode to BRU)
+   |    (change the link field of newNode to point to L's second node)
+   |    (change the link of L's first node to point to the newNode)
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Refinement of Program Strategy 3.15 into a program given on page 76 */
+
+   |  void insertNewSecondNode() {
+   |
+   |    ListNode newNode;                // let newNode be a ListNode variable
+   |
+ 5 |    newNode = new ListNode();              // store a new node in newNode
+   |    newNode.airport = "BRU";             // set newNode's airport to "BRU"
+   |    newNode.link = L.link;          // let newNode link to L's second node
+   |    L.link = newNode;            // let L's first node link to the newNode
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 3.16 The LinkedList Class Definition */
+
+   |  public class LinkedList {
+   |  
+   |   // the two data fields of a LinkedList are:
+   |    
+ 5 |      int       length;                // the number of nodes in the list.
+   |      ListNode  firstNode;         // contains a pointer to the first node
+   |                                        // of its list of linked ListNodes
+   |  
+   |   // definitions of methods that manipulate LinkedLists are given next.
+10 |   // for example, the size() method gives the number of items in the list
+   |  
+   |      public int size() {       // returns the number of items in the list
+   |        return length;
+   |      }
+15 |  
+   |   // insert here the texts of the following LinkedList methods given in:
+   |      // Program 3.17  insertNewSecondNode(airportCode)
+   |      // Program 3.19  listSearch(airportCode)
+   |      // Program 3.21  deleteLastNode()
+20 |      // Program 3.22  insertNewLastNode(airportCode)
+   |      // Program 3.23  print()
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 3.17 General Method for Inserting a New Second Node */
+
+   |  public void insertNewSecondNode(String airportCode) {
+   |  
+   |   // if the list has no first node, the result is undefined.
+   |   // in this case, exit the method instead of trying to insert a second node
+5  |      if (length == 0) return;
+   |  
+   |   // declare a pointer variable newNode that can point to ListNodes
+   |   // and initialize it to an initially empty ListNode object
+   |      ListNode newNode = new ListNode();
+10 |  
+   |   // set the airport of the newNode to the method's airportCode argument
+   |      newNode.airport = airportCode;
+   |
+   |   // change the link field of the newNode to point to the list's second node
+15 |      newNode.link = firstNode.link;
+   |
+   |   // change the link field of the firstNode to point to the newNode
+   |      firstNode.link = newNode;
+   |    
+20 |   // increase the length of the list by one
+   |      length++;
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 3.18 Strategy for List Searching */
+
+   |  public ListNode listSearch(String airportCode) {
+   |  
+   |    (declare a variable N that can point to ListNodes)
+   |  
+ 5 |    (initially, set N to point to the first node of the list)
+   |    
+   |    while (N points to a non-null node on the list) {
+   |  
+   |      if (N's airport field contains the airportCode) {
+10 |    
+   |        (exit the method and return the node pointer in N)
+   |      
+   |      } else {
+   |  
+15 |        (advance the pointer N to point to the next node on the list)  
+   |      }      
+   |    }
+   |    
+   |    (return N's value, null, as the result of the list search)
+20 |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 3.19 List Searching Method */
+
+   |  public ListNode listSearch(String airportCode) {
+   |  
+   |   // declare a variable N that can point to ListNodes
+   |      ListNode N;
+ 5 |  
+   |   // initially, set N to point to the first node of the list
+   |      N = firstNode;
+   |    
+   |   // while N points to a non-null node on the list
+10 |   // examine N's airport field
+   |      while (N != null) {
+   |        if (airportCode.equals(N.airport)) {     // if node N contains the
+   |          return N;                             // airportCode, return the
+   |        } else {                          // node pointer in N; otherwise,
+15 |          N = N.link;                             // advance N to point to
+   |        }                                     // the next node on the list
+   |      }
+   |    
+   |   // return null if no node's airport equals the airportCode
+20 |      return N;
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 3.20 Strategy for Deleting the Last Node of a List */
+
+   |  public void deleteLastNode() {    // a method that deletes the last node
+   |                                                 // of a LinkedList object
+   |  
+   |    (let previousNode and currentNode contain pointers to ListNodes)
+ 5 |    
+   |    if (the list is not the empty list) {  
+   |    
+   |      if (the list has exactly one node) {
+   |      
+10 |        (set the list to be empty)
+   |        (and decrease its length by one)
+   |      
+   |      } else {    // otherwise the list must have two or more nodes
+   |      
+15 |        (initialize a pair of pointers, (previousNode, currentNode) )
+   |        (to point to the first and second nodes)
+   |        
+   |        (advance the pointer pair along the list until)
+   |        (currentNode points to the last node)
+20 |
+   |          while (currentNode does not point to the last node) {
+   |            (advance the pair of pointers to the next pair of nodes)
+   |          }
+   |        
+25 |        (now previousNode points to the next-to-last node on the list)
+   |        (and currentNode points to the last node on the list)
+   |  
+   |        (finally, change the next-to-last node into the new last node)
+   |        (and decrease the list length by one)
+30 |  
+   |      }
+   |    
+   |    }
+   |  
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 3.21 Deleting the Last Node of a List */
+
+   |  public void deleteLastNode() {
+   |  
+   |   // let previousNode and currentNode contain pointers to ListNodes
+   |      ListNode previousNode, currentNode;
+ 5 |    
+   |    if (firstNode != null) {           // do nothing if the list was empty
+   |    
+   |      if (firstNode.link == null) {             // if the list had exactly
+   |                                                         // one node, then
+10 |        firstNode = null;                 // set the list to be empty, and
+   |        length--;                            // decrease its length by one
+   |      
+   |      } else {           // otherwise the list must have two or more nodes
+   |      
+15 |        // initialize a pair of pointers (previousNode, currentNode)
+   |        // to point to the first and second nodes
+   |           previousNode = firstNode;
+   |           currentNode = firstNode.link;
+   |        
+20 |        // advance the pointer pair along the list until
+   |        // currentNode points to the last node on the list
+   |           while (currentNode.link != null) {
+   |             previousNode = currentNode;
+   |             currentNode = currentNode.link;
+25 |           }
+   |        
+   |        // now previousNode points to the next-to-last node on the list
+   |        // and currentNode points to the last node on the list
+   |           previousNode.link = null;     // set null link in new last node
+30 |           length--;                        // decrease list length by one
+   |        
+   |      }
+   |    
+   |    }
+35 |  
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 3.22 Inserting a New Last Node on a List */
+
+   |  public void insertNewLastNode(String airportCode) {
+   |  
+   |   // construct a new node N with airport == airportCode and link == null
+   |      ListNode N = new ListNode();
+ 5 |      N.airport = airportCode;
+   |      N.link = null;
+   |    
+   |   // insert N as the new last node on the list
+   |      if (firstNode == null) {                    // if the list was empty
+10 |      
+   |        firstNode = N;                  // let N become the new first node
+   |      
+   |      } else {
+   |      
+15 |        // locate the last node of the list, using the node pointer P
+   |           ListNode P = firstNode;
+   |           while (P.link != null){
+   |             P = P.link;
+   |           }
+20 |        
+   |        // finally, link node N onto the end of the list
+   |           P.link = N;
+   |        
+   |      }
+25 |  
+   |   // increase the length of the list by one
+   |      length++;
+   |    
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 3.23 Printing a List */
+
+   |  public void print() {
+   |  
+   |   ListNode N;                 // N points to successive nodes on the list
+   |  
+ 5 |   // first, print a left parenthesis
+   |      System.out.print( "(" );
+   |  
+   |   // let N start by pointing to the first node on the list
+   |      N = firstNode;
+10 |  
+   |   // provided N doesn't point to an empty node, print N's airport
+   |   // and advance N to point to the next node on the list
+   |
+   |      while (N != null) {
+15 |        System.out.print(N.airport);                 // print airport code
+   |        N = N.link;                           // make N point to next node
+   |        if (N != null) {
+   |          System.out.print(", ");        // print comma between list items
+   |        }
+20 |      }
+   |    
+   |   // finally, print a closing right parenthesis
+   |      System.out.println( ")" );
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 3.24 An Example That Puts Some Pieces Together */
+
+   |  import java.io.*;
+   |  import java.applet.Applet;
+   |
+   |
+ 5 |  public class LinkedListApplet extends Applet {
+   |    
+   |    public void init() {
+   |  
+   |     // let L be a new linked list
+10 |        LinkedList L = new LinkedList();
+   |    
+   |     // first, construct the list L = (DUS, ORD, SAN)
+   |        L.insertNewLastNode("DUS");
+   |        L.insertNewLastNode("ORD");
+15 |        L.insertNewLastNode("SAN");
+   |    
+   |     // now, print the list to show what it looks like before changing it
+   |        L.print();
+   |    
+20 |     // then, insert a new second node with the airport code BRU
+   |        L.insertNewSecondNode("BRU");
+   |      
+   |     // print the modified list
+   |        L.print();
+25 |    
+   |     // delete the last node of the list
+   |        L.deleteLastNode();
+   |      
+   |     // finally, print the shortened list
+30 |        L.print();
+   |
+   |    } // end init()
+   |  
+   |  
+35 |  } // end class LinkedListApplet
+   |  
+   |  // to finish the program, insert the full texts for the class
+   |  // definitions of ListNode and LinkedList here.
+   |  
+
+
+/*--------------------------------------------------------------------------*/
+

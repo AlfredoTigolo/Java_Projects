@@ -1,0 +1,5 @@
+Maria Gozalez, 89,83,91
+John Smith, 92,88,85
+Jimmy Chang, 78,81,83
+Jenny Williams,77,80,85
+Abraham Nore,90,92,95

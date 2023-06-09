@@ -1,0 +1,468 @@
+
+/*--------------------------------------------------------------------------*/
+
+   /** Figure 10.4 Java Definitions Assumed for Sorting Algorithms */
+
+  // defined constant
+
+    final int n = anyArbitrarySize;              // n gives the number of items
+                                                   // in the array to be sorted
+  // assumed class definition
+
+    class KeyType implements ComparisonKey {  
+      // gives a definition of the method k1.compareTo(k2)    
+    }
+
+  // assumed array declaration
+
+    KeyType[]  A;  // A[0:n - 1] is an array of keys to be sorted
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 10.5 Abstract Priority Queue Sorting */
+
+   |  void priorityQueueSort(KeyType[] A) {
+   |    
+   |    (let Q be an initially empty output queue)
+   |    (let PQ be a priority queue)
+   |    KeyType  k;  
+ 5 |
+   |  
+   |    (organize the keys in A into a priority queue, PQ)
+   |  
+   |    while (PQ is not empty) {
+10 |      
+   |      (remove the largest key, k, from PQ)
+   |      (insert key, k, on the rear of output queue, Q)
+   |    
+   |    }
+15 |
+   |    (move the keys in Q into the array A in ascending sorted order)
+   |  
+   |  }
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 10.8 SelectionSort as a Refinement of Priority Queue Sort */
+
+   |  void SelectionSort(KeyType[] A) {
+   |    
+   |      int      i, j, k;
+   |      KeyType  temp;
+ 5 |  
+   |   // initially, Q is empty, and PQ contains all keys in A, so the index, i,
+   |   // of the last key in PQ is set to n - 1, the index of the last key in A.
+   |
+   |      i = n - 1;
+10 |
+   |   // while PQ contains more than one key,
+   |   // identify and move the largest key in PQ into Q
+   |
+   |      while ( i > 0) {
+15 |      
+   |       // let j initially point to the last key in PQ
+   |          j = i;  
+   |        
+   |       // scan remaining positions in 0:i - 1 to find largest key, A[j]
+20 |          for (k = 0; k < i; k++) {
+   |            if ( A[k].compareTo(A[j])  >  0 )  j = k ;
+   |          }    
+   |        
+   |       // exchange the largest key, A[j], and the last key, A[i]
+25 |          temp = A[i]; A[i] = A[j]; A[j] = temp;
+   |      
+   |       // move boundary between PQ and Q downward one position
+   |          i--;
+   |      }
+30 |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 10.9 HeapSort */
+
+   |  void HeapSort(KeyType[] A) {
+   |  
+   |      int      i;
+   |      KeyType  temp;
+ 5 |
+   |   // heapify all subtrees except the subtree containing the root
+   |
+   |      for ( i = n / 2;  i > 1;  i--) {
+   |        siftUp(A,i,n);
+10 |      }
+   |  
+   |   // reheapify starting at the root, remove the root's key, put it
+   |   // on the output queue, and replace the root's key with the key
+   |   // in the last leaf in level order, until the heap contains one key
+15 |
+   |      for (i = n; i > 1; i--) {
+   |        siftUp(A,1,i);
+   |        temp = A[1]; A[1] = A[i]; A[i] = temp;        // swap A[1] and A[i]
+   |      }
+   |  }
+
+/* ------------------------------------------------------------------------- */
+
+   |  void siftUp(KeyType[] A, int i, int n)  {
+   |  
+   |   // let i point to the root and let n point to the last leaf in level order
+   |
+ 5 |      int j;
+   |      KeyType  rootKey;
+   |      boolean  notFinished;
+   |
+   |   // let rootKey be the key at the root
+10 |      rootKey = A[i];
+   |
+   |   // let j point to the left child of i
+   |      j = 2*i;
+   |      notFinished = (j <= n);  // siftUp is not finished if j exists in the tree
+15 |
+   |   // move any larger child that is bigger than the root key upward one
+   |   // level in the tree
+   |      while (notFinished) {
+   |      
+20 |        if (j < n) {      // if a right child of i also exists in the tree
+   |          if (A[j+1].compareTo(A[j]) > 0)  j++;          // set j to point
+   |        }                                           // to the larger child
+   |    
+   |        if (A[j].compareTo(rootKey) <= 0) {      // if the larger child is
+25 |          notFinished = false;            // not bigger than the root key,
+   |                                                   // no more keys sift up
+   |        } else {
+   |          A[i] = A[j];       // move larger child up one level in the tree
+   |          i = j;                // now, let i point to the larger child, j
+30 |          j = 2*i;           // and let j point to the new left child of i
+   |          notFinished = (j <= n);             // siftUp is not finished if
+   |        }                                          // j exists in the tree
+   |
+   |      }// end while
+35 |
+   |   // final placement of the root key
+   |      A[i] = rootKey;
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 10.10 Divide-and-Conquer Sorting Strategy */
+
+   |  void Sort(KeyType[] A, int m, int n)  {   // to sort the subarray A[m:n]
+   |                                        // of array A into ascending order
+   |
+   |    if (there is more than one item to sort in A[m:n]) {
+ 5 |      (divide A[m:n] into two subarrays A[m:i] and A[j:n])
+   |      (sort the subarray A[m:i])
+   |      (sort the subarray A[j:n])
+   |      (combine the two sorted subarrays to yield the sorted original array)
+   |    }
+10 |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 10.11 Strategy for MergeSort */
+
+   |  void  MergeSort(KeyType[] A, int m, int n) {     // to sort the subarray
+   |                                 // A[m:n] of array A into ascending order
+   |
+   |    if (there is more than one item to sort in A[m:n]) {
+ 5 |      (divide A[m:n] into two halves, leftArray and rightArray)
+   |      (MergeSort the leftArray A[m:middle])
+   |      (MergeSort the rightArray A[middle+1:n])
+   |      (merge the leftArray and the rightArray to obtain the result)
+   |    }
+10 |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program Strategy 10.12 Strategy for QuickSort */
+
+   |  void QuickSort(KeyType[] A, int m, int n)  {     // to sort the subarray 
+   |                                 // A[m:n] of array A into ascending order
+   |
+   |    if (there is more than one key to sort in A[m:n]) {
+ 5 |      (Partition A[m:n] into a leftPartition and a rightPartition)
+   |      (using one of the keys in A[m:n] as a pivot key.)
+   |      (QuickSort the leftPartition)
+   |      (QuickSort the rightPartition)
+   |    }
+10 |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 10.13 QuickSort */
+
+   |  void QuickSort(KeyType[] A, int m, int n)  {     // to sort the subarray
+   |                                 // A[m:n] of array A into ascending order
+   |    if (m < n) {
+   |      int p = partition(A,m,n);       // p gives the position of the pivot
+ 5 |      QuickSort(A,m,p-1);                // after partitioning takes place
+   |      QuickSort(A,p+1,n);
+   |    }
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 10.14 QuickSort's Partition Algorithm */
+
+   |  int partition(KeyType[] A, int i, int j)  {
+   |  
+   |    KeyType  pivot, temp;
+   |    int  k, middle, p;      
+ 5 |    
+   |    middle = ( i + j ) / 2 ;         // choose the middle key as the pivot
+   |    
+   |    pivot = A[middle]; A[middle] = A[i]; A[i] = pivot;   // place pivot in
+   |    p = i;                            // A[i] and let p point to the pivot
+10 |    
+   |    for (k = i+1; k <= j; k++) {  // scan the rest of the keys in A[i+1:j]
+   |      if (A[k].compareTo(pivot) < 0) { // any key A[k] less than the pivot
+   |        temp = A[++p]; A[p] = A[k]; A[k] = temp;        // moves to A[++p]
+   |      }
+15 |    }            
+   |    
+   |    temp = A[i]; A[i] = A[p]; A[p] = temp; // then place the pivot in A[p]
+   |    
+   |    return p;            // return the position of the pivot as the result
+20 |    
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 10.21 The InsertionSort Algorithm */
+
+   |  void InsertionSort(KeyType[] A) {
+   |
+   |      int      i,j;
+   |      KeyType   K;
+ 5 |      boolean    notFinished;
+   |    
+   |    
+   |   // for each i in the range 1:n - 1, let key K be the key, A[i].
+   |   // insert K into the subarray A[0:i - 1] in ascending order
+10 |
+   |      for (i = 1;  i < n;  i++)  {
+   |
+   |       // move each key bigger than K in A[0:i - 1]
+   |       // one space to the right  
+15 |          K = A[i];
+   |          j = i;
+   |          notFinished = (A[j - 1].compareTo(K) > 0);
+   |      
+   |        while (notFinished) {
+20 |          A[j] = A[j - 1];          // move A[j -1] one space to the right
+   |          j--;
+   |          if (j > 0) {
+   |            notFinished = (A[j - 1].compareTo(K) > 0);
+   |          } else {
+25 |            notFinished = false;
+   |          }
+   |        }
+   |    
+   |       // move the key K into the hole opened up by moving
+30 |       // the previous keys to the right
+   |          A[j] = K;
+   |      }
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 10.32 ProxmapSort */
+
+   | void ProxmapSort(ProxmapKeySlot[] A)  {
+   |  
+   |     int      i, j, runningTotal, tempInt;
+   |     KeyType  keyToInsert, tempKey;
+ 5 |     boolean  notInserted;
+   |  
+   |  // initialize status and proxmap
+   |     for (i = 0; i < n; i++)  {
+   |       A[i].proxmap = 0;         // initialize all proxmap entries to zero
+10 |       A[i].status = NOT_YET_MOVED;      // initialize status of each slot
+   |     }
+   |  
+   |  // count hits when keys are mapped into MapKey locations
+   |     for (i = 0; i < n; i++)  {
+15 |       j = MapKey(A[i].key);
+   |       A[i].insertionLoc = j;        // save value of MapKey for later use
+   |       A[j].proxmap++;                // store hit counts in proxmap field
+   |     }
+   |
+20 |  // convert hit counts to a proxmap
+   |     runningTotal = 0;
+   |     for (i = 0; i < n; i++)  {
+   |       if (A[i].proxmap > 0) {                 // any nonzero hit count is
+   |         tempInt = A[i].proxmap;           // converted to a proxmap entry
+25 |         A[i].proxmap = runningTotal;               // by substituting the
+   |         runningTotal += tempInt;                         // running total
+   |       }
+   |     }
+   |  
+30 |  // compute insertion locations
+   |     for (i = 0; i < n; i++)  {
+   |       A[i].insertionLoc = A[A[i].insertionLoc].proxmap;
+   |     }
+   |  
+35 |  // now, A[i].insertionLoc gives the insertion location for A[i].key
+   |  // and A[i].status is NOT_YET_MOVED for all i in 0:n - 1
+   |  
+   |  // rearrange A[i] in situ in A into ascending sorted order
+   |     for (i = 0; i < n; i++)  {
+40 |    
+   |     // find next key in ascending order of i that is NOT_YET_MOVED
+   |        if (A[i].status == NOT_YET_MOVED) {
+   |          j = A[i].insertionLoc;
+   |          keyToInsert = A[i].key;     // pick up A[i]'s key as keyToInsert
+45 |          A[i].status = EMPTY;   // and plan to insert it in A[j], where j
+   |          notInserted = true;                 // is its insertion location
+   |      
+   |          while (notInserted) {
+   |            if (A[j].status == NOT_YET_MOVED)  {
+50 |            
+   |              tempKey = A[j].key;                      // swap keyToInsert
+   |              A[j].key = keyToInsert;                  // with A[j]'s key.
+   |              keyToInsert = tempKey;            // mark A[j] as moved, and
+   |              A[j].status = MOVED;       // plan to insert the keyToInsert
+55 |              j = A[j].insertionLoc;       // in its insertion location, j
+   |            
+   |            } else if (A[j].status == MOVED) {       // insertion sort the
+   |                                            // keyToInsert in the subarray
+   |              if (keyToInsert.compareTo(A[j].key) < 0) {           // of A
+60 |                                                     // beginning at j. If
+   |                tempKey = A[j].key;              // keyToInsert < A[j].key
+   |                A[j].key = keyToInsert;                // swap keyToInsert
+   |                keyToInsert = tempKey;                  // with A[j]'s key
+   |              }  
+65 |                
+   |              j++;                       // and move to next key at A[j+1]
+   |            
+   |            } else {                               // A[j].status == EMPTY
+   |              A[j].key = keyToInsert;                // insert keyToInsert
+70 |              A[j].status = MOVED;                   // in the empty entry
+   |              notInserted = false;
+   |            }
+   |          }
+   |        }
+75 |     }
+   | }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 10.33 Base-26 Value of an Airport Code Key K */
+
+   |  int value(char L) {
+   |  
+   |    return (int)(L) - (int)('A');  // returns value of the letter 'L', base 26
+   |  }
+ 5 |
+   |  int base26Value(String K) {
+   |  
+   |    return value(K.charAt(0))*26*26 + value(K.charAt(1))*26
+   |           + value(K.charAt(2));
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 10.44 Main Procedure for ShellSort */
+
+   |  void ShellSort(KeyType[] A)  {
+   |  
+   |    int  i, delta;
+   |    
+ 5 |    delta = n;
+   |    
+   |    do {
+   |      delta = 1 + delta / 3;
+   |      
+10 |      for (i = 0; i < delta; i++) {
+   |        deltaInsertionSort(A,i,delta);
+   |      }
+   |    
+   |    } while (delta > 1);
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 10.45 Subroutine to InsertionSort ith Delta Subsequence in A */
+
+   |  void deltaInsertionSort(KeyType[] A, int i, int delta)  {
+   |
+   |    int       j, k;
+   |    KeyType   keyToInsert;
+ 5 |    boolean   notDone;
+   |
+   |    j = i + delta;
+   |
+   |    while (j < n) {
+10 |      
+   |     // obtain a new keyToInsert
+   |        keyToInsert = A[j];
+   |    
+   |     // move each key > keyToInsert rightward by delta spaces
+15 |     // to open up a hole in which to place the keyToInsert
+   |        k = j;
+   |        notDone = true;
+   |        do {
+   |          if (A[k - delta].compareTo(keyToInsert) <= 0 ) {
+20 |            notDone = false;
+   |          } else {
+   |            A[k] = A[k - delta];
+   |            k -= delta;
+   |            if (k == i)  notDone = false;
+25 |          }
+   |        } while (notDone);
+   |    
+   |     // put keyToInsert in hole A[k] opened by moving
+   |     // keys > keyToInsert rightward
+30 |        A[k] = keyToInsert;
+   |      
+   |     // consider next keyToInsert at an increment of delta to the right
+   |        j += delta;
+   |    
+35 |    }
+   |
+   |  }
+
+
+/*--------------------------------------------------------------------------*/
+
+   /** Program 10.46 BubbleSort */
+
+   |  void BubbleSort(KeyType[] A)  {
+   |  
+   |    int  i;   KeyType  temp;   boolean notDone;
+   |
+ 5 |    do {
+   |      notDone = false;               // initially, assume notDone is false
+   |      for (i = 0;  i < n - 1;  i++) {
+   |        if (A[i].compareTo(A[i+1]) >0) {     // if (A[i], A[i + 1]) is out
+   |         // of order, exchange A[i] and A[i+1] to put them in sorted order
+10 |            temp = A[i]; A[i] = A[i + 1]; A[i + 1] =temp;
+   |         // if you swapped you need another pass
+   |            notDone = true;
+   |        }
+   |      }
+15 |    } while (notDone);          // notDone == false if no pair of keys was
+   |  }                                            // swapped on the last pass
+
+
+/*--------------------------------------------------------------------------*/
+

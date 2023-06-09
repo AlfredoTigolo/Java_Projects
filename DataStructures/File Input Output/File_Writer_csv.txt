@@ -1,0 +1,244 @@
+//An example to manipulate the fields in a csv file then redirect the result to
+//a comma delimited file.
+package thread;
+import java.io.*;
+import java.util.*;
+
+public class File_Writer_csv {
+  public static void main(String[] args) throws IOException{
+  BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));
+  File output = new File("output.csv");  //create a new file for output.
+  output.createNewFile();  //create a new file if necessary.
+  BufferedWriter out = new BufferedWriter(new FileWriter(output));
+//System.out.print("Enter the file's name: ");  //Enter "Details.csv". This file has 5 fields.
+//String fname = buf.readLine();
+String fname = "Order_Details.csv";
+  fname = fname.trim();
+
+BufferedReader in = null;
+try{
+  in = new BufferedReader(new FileReader(fname));
+}
+catch(Exception e){
+  System.out.println("Unable to open the specified file!");
+  System.out.println(e);
+  System.exit(1);
+}
+StringTokenizer st;
+int total = 1, linenum = 0, qty = 0;
+double price_unit = 0., sum = 0.;
+
+try{
+  in = new BufferedReader(new FileReader(fname));
+  String  line = in.readLine();
+
+String st4 = "Description,Unit price,Quantity,Total";  //Print our OWN column HEADER!!! (NOT from the .csv file)";
+
+System.out.println(st4);
+
+  boolean answer = false;
+  BufferedReader inbuf = new BufferedReader(new InputStreamReader(System.in));
+  char ans = 'n';
+  if(output.exists()){
+    System.out.println("File already exists, overwrite it anyway?");
+    ans = inbuf.readLine().charAt(0);
+    }
+  if( ans == 'y' || ans == 'Y')
+    out.write(st4 + "\n"); //write the column headers to the output file.
+  else
+    System.exit(1);
+
+  while(line != null){
+      linenum++;
+    st = new StringTokenizer(line, ",");
+    while(st.hasMoreTokens() && linenum > 1){  // linenum > 1 means to skip the header of
+      String st2 = (String) st.nextToken();    //the Details.csv file. (it is String, thus it can't be PARSE!)
+      st2 = st2.trim();
+      if(total%5 == 2){   //Print the 2nd field of the .csv file (which is the product name)
+        System.out.print(st2 + "\t");
+        out.write(st2 + ",");  //write the product's name to the output file.
+        }
+      if(total%5 == 3){  //Assume that there are 5 fields in this data file. Print the 3rd field
+        price_unit = Double.parseDouble(st2);
+        System.out.print("$" + price_unit + ",");
+        out.write("$" + st2 + ",");  //write the per unit price to the output file.
+        }
+      if(total%5 == 4){  //Assume that there are 5 fields in this data file. Print the 4th field
+        qty = Integer.parseInt(st2);
+        System.out.print(qty);
+        sum = price_unit*qty;
+        sum = (double) Math.round(sum*100)/100;
+        System.out.println(",$" + sum);//round to 2 decimals.
+        out.write(qty + ",$" + sum + "\n");  //write the quantity & the sum to the output file.
+        }
+    total++;
+      }
+    line = in.readLine();
+    }
+}
+catch(Exception e){
+  System.out.println(e);
+  System.exit(0);
+  }
+
+  out.close();
+  }  //end of main()
+}  //end of class File_IO5{}
+
+/* Here is the "Details.csv" file---------
+Order ID,Product,Unit Price,Quantity,Discount
+10248,Queso Cabrales,14.00 ,12,0.00%
+10248,Singaporean Hokkien Fried Mee,9.80 ,10,0.00%
+10248,Mozzarella di Giovanni,34.80 ,5,0.00%
+10249,Tofu,18.60 ,9,0.00%
+10249,Manjimup Dried Apples,42.40 ,40,0.00%
+10250,Jack's New England Clam Chowder,7.70 ,10,0.00%
+10250,Manjimup Dried Apples,42.40 ,35,15.00%
+10250,Louisiana Fiery Hot Pepper Sauce,16.80 ,15,15.00%
+10251,Gustaf's Knäckebröd,16.80 ,6,5.00%
+10251,Ravioli Angelo,15.60 ,15,5.00%
+10251,Louisiana Fiery Hot Pepper Sauce,16.80 ,20,0.00%
+10252,Sir Rodney's Marmalade,64.80 ,40,5.00%
+10252,Geitost,2.00 ,25,5.00%
+10252,Camembert Pierrot,27.20 ,40,0.00%
+10253,Gorgonzola Telino,10.00 ,20,0.00%
+10253,Chartreuse verte,14.40 ,42,0.00%
+10253,Maxilaku,16.00 ,40,0.00%
+10254,Guaraná Fantástica,3.60 ,15,15.00%
+10254,Pâté chinois,19.20 ,21,15.00%
+10254,Longlife Tofu,8.00 ,21,0.00%
+10255,Chang,15.20 ,20,0.00%
+10255,Pavlova,13.90 ,35,0.00%
+10255,Inlagd Sill,15.20 ,25,0.00%
+10255,Raclette Courdavault,44.00 ,30,0.00%
+10256,Perth Pasties,26.20 ,15,0.00%
+10256,Original Frankfurter grüne Soße,10.40 ,12,0.00%
+10257,Schoggi Schokolade,35.10 ,25,0.00%
+10257,Chartreuse verte,14.40 ,6,0.00%
+10257,Original Frankfurter grüne Soße,10.40 ,15,0.00%
+10258,Chang,15.20 ,50,20.00%
+10258,Chef Anton's Gumbo Mix,17.00 ,65,20.00%
+10258,Mascarpone Fabioli,25.60 ,6,20.00%
+10259,Sir Rodney's Scones,8.00 ,10,0.00%
+10259,Gravad lax,20.80 ,1,0.00%
+10260,Jack's New England Clam Chowder,7.70 ,16,25.00%
+10260,Ravioli Angelo,15.60 ,50,0.00%
+10260,Tarte au sucre,39.40 ,15,25.00%
+10260,Outback Lager,12.00 ,21,25.00%
+10261,Sir Rodney's Scones,8.00 ,20,0.00%
+10261,Steeleye Stout,14.40 ,20,0.00%
+10262,Chef Anton's Gumbo Mix,17.00 ,12,20.00%
+10262,Uncle Bob's Organic Dried Pears,24.00 ,15,0.00%
+10262,Gnocchi di nonna Alice,30.40 ,2,0.00%
+10263,Pavlova,13.90 ,60,25.00%
+10263,Guaraná Fantástica,3.60 ,28,0.00%
+10263,Nord-Ost Matjeshering,20.70 ,60,25.00%
+10263,Longlife Tofu,8.00 ,36,25.00%
+10264,Chang,15.20 ,35,0.00%
+10264,Jack's New England Clam Chowder,7.70 ,25,15.00%
+10265,Alice Mutton,31.20 ,30,0.00%
+10265,Outback Lager,12.00 ,20,0.00%
+10266,Queso Manchego La Pastora,30.40 ,12,5.00%
+10267,Boston Crab Meat,14.70 ,50,0.00%
+10267,Raclette Courdavault,44.00 ,70,15.00%
+10267,Lakkalikööri,14.40 ,15,15.00%
+10268,Thüringer Rostbratwurst,99.00 ,10,0.00%
+10268,Mozzarella di Giovanni,27.80 ,4,0.00%
+10269,Geitost,2.00 ,60,5.00%
+10269,Mozzarella di Giovanni,27.80 ,20,5.00%
+10270,Inlagd Sill,15.20 ,30,0.00%
+10270,Ipoh Coffee,36.80 ,25,0.00%
+10271,Geitost,2.00 ,24,0.00%
+10272,Sir Rodney's Marmalade,64.80 ,6,0.00%
+10272,Gorgonzola Telino,10.00 ,40,0.00%
+10272,Mozzarella di Giovanni,27.80 ,24,0.00%
+10273,Ikura,24.80 ,24,5.00%
+10273,Gorgonzola Telino,10.00 ,15,5.00%
+10273,Geitost,2.00 ,20,0.00%
+10273,Boston Crab Meat,14.70 ,60,5.00%
+10273,Lakkalikööri,14.40 ,33,5.00%
+10274,Fløtemysost,17.20 ,20,0.00%
+10274,Mozzarella di Giovanni,27.80 ,7,0.00%
+10275,Guaraná Fantástica,3.60 ,12,5.00%
+10275,Raclette Courdavault,44.00 ,6,5.00%
+10276,Ikura,24.80 ,15,0.00%
+10276,Konbu,4.80 ,10,0.00%
+10277,Rössle Sauerkraut,36.40 ,20,0.00%
+10277,Tarte au sucre,39.40 ,12,0.00%
+10278,Gula Malacca,15.50 ,16,0.00%
+10278,Raclette Courdavault,44.00 ,15,0.00%
+10278,Vegie-spread,35.10 ,8,0.00%
+10278,Röd Kaviar,12.00 ,25,0.00%
+10279,Alice Mutton,31.20 ,15,25.00%
+10280,Guaraná Fantástica,3.60 ,12,0.00%
+10280,Pâté chinois,19.20 ,20,0.00%
+10280,Rhönbräu Klosterbier,6.20 ,30,0.00%
+10281,Teatime Chocolate Biscuits,7.30 ,1,0.00%
+10281,Guaraná Fantástica,3.60 ,6,0.00%
+10281,Steeleye Stout,14.40 ,4,0.00%
+10282,Nord-Ost Matjeshering,20.70 ,6,0.00%
+10282,Ravioli Angelo,15.60 ,2,0.00%
+10283,Genen Shouyu,12.40 ,20,0.00%
+10283,Teatime Chocolate Biscuits,7.30 ,18,0.00%
+10283,Camembert Pierrot,27.20 ,35,0.00%
+10283,Mozzarella di Giovanni,27.80 ,3,0.00%
+10284,Schoggi Schokolade,35.10 ,15,25.00%
+10284,Gula Malacca,15.50 ,21,0.00%
+10284,Camembert Pierrot,27.20 ,20,25.00%
+10284,Laughing Lumberjack Lager,11.20 ,5,25.00%
+10285,Chai,14.40 ,45,20.00%
+10285,Boston Crab Meat,14.70 ,40,20.00%
+10285,Perth Pasties,26.20 ,36,20.00%
+10286,Steeleye Stout,14.40 ,100,0.00%
+10286,Tarte au sucre,39.40 ,40,0.00%
+10287,Pavlova,13.90 ,40,15.00%
+10287,Sasquatch Ale,11.20 ,20,0.00%
+10287,Spegesild,9.60 ,15,15.00%
+10288,Tourtière,5.90 ,10,10.00%
+10288,Scottish Longbreads,10.00 ,3,10.00%
+10289,Aniseed Syrup,8.00 ,30,0.00%
+10289,Wimmers gute Semmelknödel,26.60 ,9,0.00%
+10290,Chef Anton's Gumbo Mix,17.00 ,20,0.00%
+10290,Thüringer Rostbratwurst,99.00 ,15,0.00%
+10290,Maxilaku,16.00 ,15,0.00%
+10290,Original Frankfurter grüne Soße,10.40 ,10,0.00%
+10291,Konbu,4.80 ,20,10.00%
+10291,Gula Malacca,15.50 ,24,10.00%
+10291,Manjimup Dried Apples,42.40 ,2,10.00%
+10292,Sir Rodney's Marmalade,64.80 ,20,0.00%
+10293,Carnarvon Tigers,50.00 ,12,0.00%
+10293,Guaraná Fantástica,3.60 ,10,0.00%
+10293,Vegie-spread,35.10 ,5,0.00%
+10293,Rhönbräu Klosterbier,6.20 ,6,0.00%
+10294,Chai,14.40 ,18,0.00%
+10294,Alice Mutton,31.20 ,15,0.00%
+10294,Ipoh Coffee,36.80 ,15,0.00%
+10294,Camembert Pierrot,27.20 ,21,0.00%
+10294,Rhönbräu Klosterbier,6.20 ,6,0.00%
+10295,Gnocchi di nonna Alice,30.40 ,4,0.00%
+10296,Queso Cabrales,16.80 ,12,0.00%
+10296,Pavlova,13.90 ,30,0.00%
+10296,Gudbrandsdalsost,28.80 ,15,0.00%
+10297,Chartreuse verte,14.40 ,60,0.00%
+10297,Mozzarella di Giovanni,27.80 ,20,0.00%
+10298,Chang,15.20 ,40,0.00%
+10298,Inlagd Sill,15.20 ,40,25.00%
+10298,Raclette Courdavault,44.00 ,30,25.00%
+10298,Tarte au sucre,39.40 ,15,0.00%
+10299,Teatime Chocolate Biscuits,7.30 ,15,0.00%
+10299,Outback Lager,12.00 ,20,0.00%
+10300,Louisiana Hot Spiced Okra,13.60 ,30,0.00%
+10300,Scottish Longbreads,10.00 ,20,0.00%
+10301,Boston Crab Meat,14.70 ,10,0.00%
+10301,Gnocchi di nonna Alice,30.40 ,20,0.00%
+10302,Alice Mutton,31.20 ,40,0.00%
+10302,Rössle Sauerkraut,36.40 ,28,0.00%
+10302,Ipoh Coffee,36.80 ,12,0.00%
+10303,Boston Crab Meat,14.70 ,40,10.00%
+10303,Louisiana Fiery Hot Pepper Sauce,16.80 ,30,10.00%
+10303,Scottish Longbreads,10.00 ,15,10.00%
+10304,Maxilaku,16.00 ,30,0.00%
+10304,Raclette Courdavault,44.00 ,10,0.00%
+10304,Fløtemysost,17.20 ,2,0.00%
+10305,Carnarvon Tigers,50.00 ,25,10.00%
+*/
