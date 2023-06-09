@@ -1,0 +1,53 @@
+/* Written by Jen Chen
+   Updated on March the 4th, 2003
+   Copyrighted by Jen Chen
+*/
+package stack_queue;
+import java.util.*;
+import java.io.*;
+
+public class myStack extends Vector implements Cloneable, Collection, List, Serializable{
+  private int CAPACITY=32;  //32 for 32-bits integers
+  private int size = -1;  //empty stack at the beginning.
+  private Object[] obj = new Object[CAPACITY]; //create an array of object.
+
+  public myStack(){}
+  public myStack(int capacity){this.CAPACITY = capacity;}
+
+  public int size(){ return size + 1;}  //return the number of elements on the stack.
+  public void push(Object o){
+    if(isFull())
+      System.out.println("Stack is full, can not add more element!");
+    else{
+      ++size;
+      obj[size] = o;  //remember to increment the size of the stack BEFORE
+    }
+  }     //ADDING an element to the stack. Otherwise, stack overflow will occur.
+
+  public Object pop(){
+    if(isEmpty())
+      return ("Stack is empty!");
+    else
+      return obj[size--];
+    }
+
+  public void peek(){
+    if(isEmpty())
+      System.out.println("Stack is empty!");
+    System.out.println(obj[size]);
+  }
+
+  public boolean isEmpty(){
+    if( size < 0)
+      return true;
+    else
+      return false;
+  }
+
+  public boolean isFull(){
+    if(size == CAPACITY - 1)
+      return true;
+    else
+      return false;
+  }
+}//end of class myStack{}

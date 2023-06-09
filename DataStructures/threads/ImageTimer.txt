@@ -1,0 +1,26 @@
+///////    ImageTimer.java    ///////
+import java.awt.*;
+import javax.swing.*;
+
+public class ImageTimer extends Timer60
+{   protected void init()
+    {   tk = Toolkit.getDefaultToolkit();
+        img = new Image[11];
+        for ( int i=0; i < 10; i++ )
+            img[i] = tk.createImage( "images/0"+
+                             i + "green.gif");
+        img[10] = tk.createImage("images/cogreen.gif");
+        if ( face == null )
+             face = new ImageFace(img, Color.cyan);
+        super.init();
+    }
+
+    protected Image[] img;
+                                                      
+    public static void main(String[] args)
+    {   ImageTimer tm = new ImageTimer();
+        tm.init();
+        tm.go(new JFrame("ImageTimer"));
+    }
+
+}

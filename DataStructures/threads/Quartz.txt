@@ -1,0 +1,27 @@
+///////    Quartz.java    ///////
+
+public class Quartz extends Thread
+{     public Quartz(Timer60 a)  { tm = a; }
+
+      public Quartz(Timer60 a, int d)
+      { tm = a; delay = d; }
+
+      protected Quartz() {}
+
+      public void run() 
+      {  while ( me == Thread.currentThread() )
+         {  try 
+            {    Thread.sleep(delay); 
+            } catch (InterruptedException e)
+              {  break; }
+            tm.countDown();
+         }
+         tm.pause();
+      }
+
+      public void tref(Thread t) { me = t; }  // thread ref
+
+      Timer60 tm;
+      volatile Thread me = null;
+      int delay = 1000; // default 1 sec delay
+}

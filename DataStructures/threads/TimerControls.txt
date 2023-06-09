@@ -1,0 +1,78 @@
+///////    TimerControls.java    ///////
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/* the controls of a timer that buzzes 
+ *  when the set time expires
+ *     sets the timer (min and sec buttons)
+ *     starts and stops the timer (go/stop button)
+ */
+
+public class TimerControls extends JPanel
+{     public TimerControls(Timer60 t, Color bg)
+      {   tm = t; 
+          setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+          add(Box.createHorizontalGlue());
+          add(m = new JButton("min"));
+          add(s = new JButton("sec"));
+          add(ss = new JButton(" go "));
+          s.setActionCommand("sec");
+          m.setActionCommand("min");
+          ss.setActionCommand(" go ");
+          s.setBackground(bg);
+          m.setBackground(bg);
+          ss.setBackground(bg);
+          s.addActionListener(new SetHandler());
+          m.addActionListener(new SetHandler());
+          ss.addActionListener(new SsHandler());
+      }
+
+      protected TimerControls() { }
+
+      void startButton()
+      {    ss.setText(" go ");   }
+
+      protected int minute=0, second=0;
+      protected JButton m,s,ss; 
+      protected Timer60 tm;
+      protected boolean stopped=true;
+
+      private final class SetHandler
+                    implements ActionListener
+      {   public void actionPerformed(ActionEvent e)
+          {  second = tm.getSecond();
+             minute = tm.getMinute();
+             if ( e.getActionCommand().equals("sec") ) 
+             {   if ( ! stopped ) 
+                 {  tm.pause();
+                    stopped = true;
+                 }
+                 second = (second + 1)%60;
+             }
+             if ( e.getActionCommand().equals("min") ) 
+             {   if ( ! stopped )
+                 {  tm.pause();
+                    stopped = true;
+                 }
+                 minute = (minute + 1)%61; 
+                 if ( minute == 60 ) second = 0;
+             }
+             tm.set(minute, second);
+             if ( ss.getText().equals("stop") )
+             {   ss.setText(" go ");
+             }
+          }
+      }
+
+      private final class SsHandler
+                    implements ActionListener
+      {   public void actionPerformed(ActionEvent e)
+          {   if ( tm.beginEnd() )
+                   ss.setText("stop");
+              else 
+                   ss.setText(" go ");
+          }
+      }
+}
+

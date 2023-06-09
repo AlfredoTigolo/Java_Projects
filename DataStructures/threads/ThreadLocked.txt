@@ -1,0 +1,37 @@
+package thread1;
+
+public class ThreadLocked {
+ public static void main(String[] args)   throws InterruptedException{
+  final int[] arr = new int[10];  //the object "arr" has to be "final" because it's called inside the inner class "Thread{}"
+  final int[] arr2 = new int[10]; //the object "arr2" has to be "final" because it's called inside the inner class "Thread{}"
+
+  Thread t1 = new Thread(){
+    public void run(){
+      synchronized(arr){  //Locked the object "arr" as soon as we "synchronized" it.
+          System.out.println("Thread 1: Locked object arr");
+          try{ Thread.sleep(50);}
+          catch(InterruptedException e){}
+      synchronized(arr2){  //Locked the object "arr2" as soon as we "synchronized" it.
+          System.out.println("Thread 1: Locked object arr2");
+          }//end of synchronize the object "obj2"
+      }//end of synchronized object "obj"
+    }//end of run()
+  };//end of thread t1.
+
+  Thread t2 = new Thread(){
+    public void run(){
+      synchronized(arr2){ //Locked the object "arr2" as soon as we "synchronized" it. But
+          System.out.println("Thread 2: Locked object obj");
+          try{ Thread.sleep(50);}
+          catch(InterruptedException e){}
+      synchronized(arr){  //This will create an impass, since the object "arr" is locked by the thread t1. Thus results in deadlock!
+          System.out.println("Thread 2: Locked object obj2");
+          }//end of synchronize the object "obj2"
+      }//end of synchronized object "obj"
+    }//end of run()
+  };//end of thread t2.
+
+  t1.start();
+  t2.start();
+  }//end of main()
+} //end of class Thread2{}

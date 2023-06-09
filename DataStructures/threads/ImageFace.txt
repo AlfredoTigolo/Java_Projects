@@ -1,0 +1,43 @@
+///////    ImageFace.java    ///////
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Image;
+
+// A nice looking timer display
+
+public class ImageFace extends TimerFace
+{     public ImageFace(Image[] im, Color c)
+      {   setup();  bg = c;
+          dig = im;    // dig[10] is colon (:) 
+      }  
+      
+      protected ImageFace() {}
+
+      public void paintComponent(Graphics g)
+      {   super.paintComponent(g);
+          w = getWidth();
+          h = getHeight();
+          g.setColor(bg);
+          g.fillRoundRect(3, 4, w-6, h-4, 10, 6);
+          g.setColor(Color.black);
+          g.fillRect(10, 8, w-20, h-12);         
+          w = (w-26)/5; h -= 16;
+          x = 15; y = 9;
+          success =
+           (g.drawImage(dig[m1], x,     y, w, h, this) &&
+            g.drawImage(dig[m2], x+w,   y, w, h, this) &&
+            g.drawImage(dig[10], x+2*w, y, w, h, this) &&
+            g.drawImage(dig[s1], x+3*w, y, w, h, this) &&
+            g.drawImage(dig[s2], x+4*w, y, w, h, this));
+      }
+
+      public void set(int min, int sec)
+      {   m = min; s = sec; 
+          setup();  repaint();
+      }
+
+      protected Image[] dig;  // timer digits
+      protected int x, y, w, h;
+      protected Color bg;
+      protected boolean success;
+}

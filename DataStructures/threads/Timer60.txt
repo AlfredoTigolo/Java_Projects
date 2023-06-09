@@ -1,0 +1,117 @@
+///////    Timer60.java    ///////
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+/** a 60-min timer that rings
+ *  when the set time expires
+ */
+
+public class Timer60 extends JPanel
+{
+      protected void init()
+      {   tmt = null;
+          if ( cntl == null )
+               cntl = new TimerControls(this, Color.cyan);
+          if ( face == null )
+               face = new TimerFace(Color.blue);
+          face.set(m,s);
+          myBorder();
+          setLayout(new BorderLayout());
+          add(face, BorderLayout.CENTER);
+          add(cntl, BorderLayout.SOUTH);
+          if ( tk == null )
+               tk = Toolkit.getDefaultToolkit();
+      }
+
+      private void myBorder()
+      {   setBorder(BorderFactory.createCompoundBorder
+          (   BorderFactory.createEmptyBorder(20, 10, 10, 20),
+                BorderFactory.createLineBorder(Color.blue)
+          ));
+      }
+
+      public void countDown()
+      {   tick();   // down
+          face.set(m, s);
+      }
+
+      protected void tick()
+      {  if ( s <= 0 )
+         {  if ( m <= 0 )
+            {   cntl.startButton();
+                ring();
+                pause();
+                return;
+            }
+            s=59;  m--;
+         }
+         else s--;
+         return;
+      }
+
+      protected void ring()
+      {   try       // 0.4-sec interval between sounds
+          {  tk.beep();   Thread.sleep(400);
+             tk.beep();   Thread.sleep(400);
+             tk.beep();
+          }  catch( InterruptedException e) { }
+      }
+
+      // returns true if timer is started else false
+      public boolean beginEnd()
+      {   if  ( tmt == null )
+          {  if ( s <=0 && m <=0 ) return false;
+             tmt = new Quartz(this);  
+             tmt.tref(tmt); 
+             tmt.start();   // start Quartz thread
+             return true;
+          }
+          pause();
+          return false;
+      }
+
+      public void pause()
+      {   if ( tmt != null )
+          {    tmt.tref(null); 
+               tmt=null;
+          }
+      }
+
+      public void set(int min, int sec)
+      {   if ( min < 0 || sec < 0 ) return;
+          pause();
+          m = Math.min(min, 60);
+          if ( m == 60 ) s = 0;
+          else s = Math.min(sec, 59);  
+          face.set(m,s);
+      }
+
+      public int getMinute()
+      {   return m;   }
+
+      public int getSecond()
+      {   return s;   }
+
+      protected TimerControls cntl;
+      protected TimerFace face;
+      protected Toolkit tk;         // for application sound
+      protected int m=0, s=0;       // min, sec, counter
+      protected Quartz tmt = null;  // timing thread
+
+
+      public static void main(String[] args)
+      {   Timer60 tm = new Timer60();
+          tm.init();
+          tm.go(new JFrame("Timer"));
+      }
+
+      protected void go(JFrame win)
+      {   win.setContentPane(this);
+          win.addWindowListener(new WindowHandler(win)) ;
+          win.setSize(220, 136);
+          win.validate();
+          win.setVisible(true);
+      }
+}
+

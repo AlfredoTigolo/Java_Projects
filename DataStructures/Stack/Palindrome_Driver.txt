@@ -1,0 +1,27 @@
+/* Written by Jen Chen
+   Updated on March the 4th, 2003
+   Copyrighted by Jen Chen
+*/
+package stack_queue;
+
+public class Palindrome_Driver {
+  public static void main(String[] args) {
+  String[] st = {"Cocococ", "@#$c$#@~", "12o21", "Mom", "coca8AcoC"};  //non palindrome.;
+
+  if(args.length < 1){
+    System.out.println("USAGE: java Palindrome arg1 arg2 arg3 ....");
+    System.out.println("Use built-in data: ");
+  }else{
+    for (int i = 0; i < args.length; i++)
+      st[i] = args[i].trim();
+  }//end of IF()
+
+  for(int i = 0; i < st.length; i++){
+    Palindrome pal = new Palindrome(st[i].trim());
+    if(pal.checkPalindrome(st[i]))
+      System.out.println(st[i] + " is a palindrome!");
+    else
+      System.out.println(st[i] + " is NOT a palindrome!");
+  }//end of FOR()
+  }//end of main()
+}//end of class Palindrome{}

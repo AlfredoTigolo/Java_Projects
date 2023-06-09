@@ -1,0 +1,24 @@
+package chp15;
+
+/**
+ * <p>Title: Alfredo Tigolo III</p>
+ * <p>Description: Define threads using the Runnable interface </p>
+ * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Company: </p>
+ * @author unascribed
+ * @version 1.0
+ */
+
+public class TestRunnable {
+
+  /**Main Method*/
+  public static void main(String[] args) {
+    new TestRunnable();
+
+    //Create threads
+
+    //Start threads
+  }
+
+  /**Default constructor*/
+}

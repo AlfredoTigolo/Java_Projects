@@ -1,0 +1,71 @@
+package chp15;
+
+/**
+ * <p>Title: Alfredo Tigolo III</p>
+ * <p>Description: TestThread.java: Define threads using the Thread class</p>
+ * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Company: </p>
+ * @refer to page 665 to 667
+ * @version 1.0
+ */
+
+public class TestThread {
+
+  /**Main Method*/
+  public static void main(String[] args) {
+
+    //Create Threads
+    PrintChar printA = new PrintChar('a', 100);
+    PrintChar printB = new PrintChar('b', 100);
+    PrintNum print100 = new PrintNum(100);
+
+    //Start threads
+    printA.start();
+    printB.start();
+    print100.start();
+
+  }
+}
+
+/**
+ * The thread class for printing a specified character in specified times.
+ */
+
+class PrintChar extends java.lang.Thread {
+
+  //data members
+  private char charToPrint; //The character to print
+  private int times; //The times to repeat
+
+  /**Construct a thread with specified character and number of times
+   * to print the character
+   */
+  public PrintChar(char c, int t) {
+    charToPrint = c;
+    times = t;
+  }
+
+  /**Override the run() method to tell the system what the thread will do*/
+  public void run() {
+    for (int i=0; i<times; i++)
+      System.out.print(charToPrint);
+  }
+}
+
+class PrintNum extends java.lang.Thread{
+
+  //date member
+  private int lastNum;
+
+  /**Construct a thread for print 1, 2, ...i*/
+  public PrintNum(int n) {
+    lastNum = n;
+  }
+
+  /**Tell the thread how to run*/
+  public void run() {
+    for(int i =1; i <= lastNum; i++)
+      System.out.print(" "+i);
+  }
+
+}

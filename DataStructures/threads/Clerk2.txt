@@ -1,0 +1,26 @@
+package thread2;
+
+public class Clerk2 implements Runnable{
+  private Bank2 theBank;   //the bank itself, ie the employer
+  private Transaction inTray;   //to hold the transaction
+//Constructor
+  public Clerk2(Bank2 theBank){
+    this.theBank = theBank;
+    inTray = null;
+  }
+  //Receive a teansaction
+  public void doTransaction(Transaction transaction){ inTray = transaction;}
+  //The clerk
+  public void run(){
+    while(true){
+      while(inTray == null){   //No transaction waiting?
+        try{ Thread.sleep(150); }
+        catch(InterruptedException e){ System.out.println(e);}
+      }//end of inner WHILE()
+    theBank.doTransaction(inTray);
+    inTray = null;  //inTray is empty
+    }//end of outer WHILE()
+    }//end of run()
+  //Busy check
+  public boolean isBusy(){return inTray != null;}
+}//end of class Clerk

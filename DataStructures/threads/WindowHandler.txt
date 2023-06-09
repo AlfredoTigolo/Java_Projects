@@ -1,0 +1,19 @@
+///////    WindowHandler.java    ///////
+import java.awt.Frame;
+import java.awt.event.*;
+
+/** Handles Window Closing Event
+ *      action: terminate program
+ */
+
+public class WindowHandler extends WindowAdapter
+{   WindowHandler(Frame f)  { fr = f; } 
+
+    public void windowClosing(WindowEvent e) 
+    {  fr.setVisible(false); 
+       fr.dispose();
+       System.exit(0);
+    }
+
+    private Frame fr = null; 
+}

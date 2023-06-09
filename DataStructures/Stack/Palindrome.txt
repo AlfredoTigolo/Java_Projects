@@ -1,0 +1,47 @@
+/* Written by Jen Chen
+   Updated on March the 4th, 2003
+   Copyrighted by Jen Chen
+*/
+package stack_queue;
+
+public class Palindrome {
+  private myStack mystak = new myStack();
+  private myStack mystak2 = new myStack();
+  private String st = null;
+
+  public Palindrome(){}
+  public Palindrome(String str){
+    this.st = str;
+  }
+
+  public boolean checkPalindrome(String str){
+    boolean palin = false;
+
+      if(str.length() < 2)
+        palin = true;
+      else if(str.length()%2 == 0){
+          for(int k = 0; k < str.length()/2; k++)
+            mystak.push(new Character(Character.toLowerCase(str.charAt(k))));
+//get the other half of the string. Starting from the END of the string UP TO the number equal to half the length of the string.
+          for(int m = (str.length() - 1); m >= str.length()/2; m--)
+            mystak2.push(new Character(Character.toLowerCase(str.charAt(m))));
+        }
+      else{
+          for(int k = 0; k < str.length()/2; k++)
+            mystak.push(new Character(Character.toLowerCase(str.charAt(k))));
+//get the other half of the string. Starting from the END of the string UP TO the number equal to half of the length of the (string + 1).
+          for(int n = (str.length() - 1); n > str.length()/2; n--)
+            mystak2.push(new Character(Character.toLowerCase(str.charAt(n))));
+      }//end of IF()
+
+    while(!mystak.isEmpty()){
+      if(mystak.pop().equals(mystak2.pop())){
+        palin = true;
+      }else{
+        palin = false;//from the current stack out to empty the stack. Otherwise comparison will be INCORRECT.
+        break; //get out of the loop!
+      }
+    }//end of WHILE()
+    return palin;
+  }//end of method checkPalindrome()
+}//end of class Palindrome{}

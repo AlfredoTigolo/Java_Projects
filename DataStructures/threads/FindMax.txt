@@ -1,0 +1,41 @@
+///////    FindMax.java    ///////
+
+class MaxGuard
+{
+  private int maxValue;
+  public MaxGuard(int e)
+     {   maxValue = e; }
+
+  public synchronized int getMax()
+     {    return maxValue;   }
+
+  public synchronized void setMax(int e)
+     {    maxValue = Math.max(maxValue, e);   }
+}//end of class MaxGuard{}
+
+public class FindMax extends Thread{
+  public FindMax(int[] ar, int l, int h, MaxGuard m){
+    arr = ar;  low = l+1; high = h;
+    l_max = arr[l];  xobj = m;
+  } //end of FindMax()
+
+  public void run(){
+    try{
+      while ( low < high ){
+        int n = Math.min(incr, high-low);
+           for (int i=low; i <= low+n; i++)
+               l_max = Math.max(l_max, arr[i]); // (1)
+           sleep(5);
+           low += n;
+       }//end of WHILE
+    }  catch(InterruptedException e)
+       {   return ;  }
+    xobj.setMax(l_max);                         // (2)
+  } //end of run()
+
+  private int l_max;      // local maximum
+  private int low, high;  // array range
+  private int incr = 10;  // increment
+  private int[] arr;      // array ref
+  private MaxGuard xobj;  // mutex object
+}

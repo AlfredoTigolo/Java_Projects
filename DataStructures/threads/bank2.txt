@@ -1,0 +1,33 @@
+package thread2;
+
+public class Bank2 {
+//Perform a transaction
+  public void doTransaction(Transaction transaction){
+    switch(transaction.getTransactionType()){
+      case Transaction.CREDIT :
+      synchronized(transaction.getAccount()){
+      //get current balance
+      int balance2 = transaction.getAccount().getBalance();
+        try{ Thread.sleep(100);}
+        catch(InterruptedException e){ System.out.println(e);}
+
+        balance2 += transaction.getAmount();
+        transaction.getAccount().setBalance(balance2);
+        break;
+      }//end of synchronized
+      case Transaction.DEBIT :
+        synchronized(transaction.getAccount()){
+        int balance2 = transaction.getAccount().getBalance();
+        try{ Thread.sleep(150);}
+        catch(InterruptedException e){ System.out.println(e);}
+
+        balance2 -= transaction.getAmount();
+        transaction.getAccount().setBalance(balance2);
+        break;
+      }//end of synchronized
+      default:
+        System.out.println("Invalid transaction");
+      System.exit(1);
+    }//end of switch()
+  }//end of Transaction()
+}//end of class Bank{}

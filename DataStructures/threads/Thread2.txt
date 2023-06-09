@@ -1,0 +1,29 @@
+package thread1;
+
+public class Thread2 {
+  public static void main(String[] args)   throws InterruptedException{
+    EvenOdd2 odd = new EvenOdd2(1, 20);  //created a thread
+    EvenOdd2 even = new EvenOdd2(0, 30);
+    odd.run();
+    even.run();
+
+  }//end of main()
+} //end of class Thread2{}
+
+class EvenOdd2 implements Runnable{
+  private int i0, delay;
+  public EvenOdd2(int first, int interval){
+    i0 = first;
+    delay = interval;
+  }
+  public void run(){
+      for(int i = i0; i < 30; i += 2){
+        if(i%10 != 0)
+          System.out.print(i + "\t");
+        else if(i%9 != 0)
+          System.out.print(i + "\t");
+        else
+          System.out.print(i + "\n");
+        }//end of FOR
+    } //end of run()
+  } //end of class EvenOdd2{}

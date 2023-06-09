@@ -1,0 +1,39 @@
+///////    TimerFace.java    ///////
+import java.awt.*;
+import javax.swing.*;
+
+// a face display for a timer
+
+public class TimerFace extends JPanel
+{
+      public TimerFace(Color c)
+      {   setup();
+          String time = ""+ m1 + m2 + ":" + s1 + s2;
+          face = new JLabel(time, JLabel.CENTER);
+          face.setFont(f);
+          face.setForeground(c);
+          setLayout(new BorderLayout());
+          add(face, BorderLayout.CENTER);
+      }
+
+      protected TimerFace() { }
+
+      public void set(int min, int sec)
+      {   m = min; s = sec; 
+          setup();
+          String time = ""+ m1 + m2 + ":" + s1 + s2;
+          face.setText(time);
+      }
+
+      protected void setup()
+      {   m1 = m/10; m2 = m % 10;
+          s1 = s/10; s2 = s % 10;
+      }
+
+      protected JLabel face;
+      protected Font f = new Font("Courier", Font.BOLD, 36);
+      protected int m=0, s=0;              // time displayed
+      protected int m1, m2, s1, s2;        // digits
+}
+
+

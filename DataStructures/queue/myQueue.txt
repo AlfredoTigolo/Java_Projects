@@ -1,0 +1,95 @@
+CS212 LECTURE 2-25-03
+/*
+Queue :* array, implementation
+- Link Listed implementation (later)
+
+- capacity: 10;
+- size of the queue: size;
+END QUEUE			FRONT OF QUEUE
+[ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+tail of queue			dequeue [0]
+
+last, indicies, first, first index
+(last index in the array) -> if last =-1 -> queue is empty
+
+When we dequeue, -> size --; but increment indexd "first" by one
+first ++;
+
+(increment size by 1: ie : size++;)
+What happened to the first index?
+empty queue -> last =-1; first =-1;
+
+Deal with an empy case first
+
+The dequeue method does what?
+What do we do when we are doing an enqueue.  Think about the Stack when we are working
+on the enqueue.  The reason why the isFull is because you need to check if one is bigger
+than the other.
+Enqueue, last
+Dequene, first
+FIRST IN, LAST OUT
+FIRST IN, FIRST OUT
+*/
+package stack_queue;
+
+public class myQueue {
+  private int first, last, capacity, size = 0;
+  private Object[] obj;
+
+  public myQueue(){ this.capacity = 100;}
+  public myQueue(int howmany){
+    this.capacity = howmany;
+    obj = new Object[howmany];
+    first = -1;//empty queue.
+    last = -1;//empty queue.
+  }
+
+  public boolean isFull(){
+    return ((first == 0 && last == capacity -1) || (first == last + 1));
+  }
+
+  public boolean isEmpty(){
+    if(first < 0)
+      return true;
+    else
+      return false;
+  }
+
+  public int size(){return size;}
+
+  public void enQueue(Object o){
+    if(last == capacity -1 || last == -1){//If the queue is FULL or EMPTY.
+      obj[0] = o;//If FULL!
+      last = 0;
+      if(first == -1) first = 0;//If empty!
+      size++;
+     }else{
+      obj[++last] = o;
+      size++;
+      }
+  }
+
+  public Object deQueue(){
+    Object tmp = null;
+    if(isEmpty())
+      return ("Empty queue!");
+    else{
+      tmp = obj[first];
+      if(first == last) //if the object is the LAST element in the queue.
+        last = first = -1;  //AFTER dequeueing this last element, then the queue is empty.
+      else if (first == capacity - 1) //If the element is the LAST element of a
+        first = 0; //FULL queue, then reset the next element to be the first element in the queue.
+      else
+        first++;
+      size--;
+    }
+    return tmp;
+    }
+
+  public void peek(){
+    if(isEmpty())
+      System.out.println("Empty queue!");
+    else
+      System.out.println(obj[first]);
+  }
+}//end of class myQueue{}
